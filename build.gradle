@@ -15,8 +15,6 @@ task wrapper(type: Wrapper) {
     gradleVersion = '3.1'
 }
 
-ant.importBuild 'build.xml'
-
 apply plugin: 'kotlin'
 apply plugin: 'idea'
 apply plugin: 'application'
@@ -38,17 +36,11 @@ jar {
     version = '0.0.1-SNAPSHOT'
     manifest {
         attributes("Implementation-Version": version)
+        attributes("OmegaT-Plugin": "true")
+        attributes(["OmegaT-Plugin": "base"], "pl.weblang.Weblang")
     }
 
-    outputs.upToDateWhen { false }
-
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-}
-
-task patchJar(type: Exec, dependsOn: jar) {
-    commandLine './script/patchJar.sh'
-
-    outputs.upToDateWhen { false }
 }
 
 repositories {
@@ -66,7 +58,4 @@ dependencies {
     compile('org.omegat:omegat:4.0.0-02') { transitive = false }
     compile 'org.omegat:vldocking:3.0.5'
 }
-
-patchJar.mustRunAfter jar
-startScripts.dependsOn patchJar
 

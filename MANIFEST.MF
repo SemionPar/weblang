@@ -1,6 +1,0 @@
-
-OmegaT-Plugin: true
-
-Name: pl.weblang.Weblang
-OmegaT-Plugin: base
-
