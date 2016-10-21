@@ -1,8 +1,13 @@
 package pl.weblang
 
-class WeblangApplicationTests {
+import io.kotlintest.specs.FlatSpec
 
-    fun contextLoads() {
+class WeblangTest : FlatSpec() {
+
+    init {
+        "Weblang" should "initialize" {
+            Weblang()
+        }
     }
 
 }
