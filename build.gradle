@@ -26,8 +26,11 @@ targetCompatibility = 1.8
 mainClassName = "pl.weblang.WeblangKt"
 
 jacocoTestReport {
+    toolVersion = "0.5.8.201207111220"
+    reportsDir = file("$buildDir/reports/jacoco")
     reports {
         xml.enabled true
+        xml.destination "${buildDir}/reports/jacoco/jacoco/report.xml"
     }
 }
 
