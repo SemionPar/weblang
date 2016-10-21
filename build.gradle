@@ -7,29 +7,59 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
     }
 }
 
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.1'
+}
+
 apply plugin: 'kotlin'
-apply plugin: 'eclipse'
-apply plugin: 'spring-boot'
+apply plugin: 'idea'
+apply plugin: 'application'
+
+ant.importBuild 'build.xml'
+
+mainClassName = "pl.weblang.WeblangKt"
 
 jar {
     baseName = 'weblang'
     version = '0.0.1-SNAPSHOT'
+    manifest {
+        attributes("Implementation-Version": version)
+    }
+
+    outputs.upToDateWhen { false }
+
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
 }
+
+task patchJar(type: Exec, dependsOn: jar) {
+    commandLine './script/patchJar.sh'
+
+    outputs.upToDateWhen { false }
+}
+
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
+    maven {
+        url 'http://dl.bintray.com/omegat-org/maven'
+    }
 }
 
 
 dependencies {
-    compile('org.springframework.boot:spring-boot-starter-batch')
     compile("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}")
-    testCompile('org.springframework.boot:spring-boot-starter-test')
+
+    // OmegaT 
+    compile('org.omegat:omegat:4.0.0-02') { transitive = false }
+    compile 'org.omegat:vldocking:3.0.5'
 }
+
+patchJar.mustRunAfter jar
+startScripts.dependsOn patchJar
+

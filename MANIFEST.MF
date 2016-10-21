@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Implementation-Version: 0.0.1-SNAPSHOT
+OmegaT-Plugin: true
+
+Name: pl.weblang.Weblang
+OmegaT-Plugin: base
+
