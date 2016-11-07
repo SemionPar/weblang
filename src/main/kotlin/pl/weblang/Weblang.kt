@@ -4,6 +4,7 @@ import org.omegat.core.Core
 import org.omegat.core.CoreEvents
 import org.omegat.core.events.IApplicationEventListener
 import org.omegat.core.events.IProjectEventListener
+import pl.weblang.gui.WeblangPane
 
 class Weblang {
 
@@ -32,8 +33,9 @@ class Weblang {
 
     private fun createIApplicationEventListener(): IApplicationEventListener = object : IApplicationEventListener {
         override fun onApplicationStartup() {
-            val mainWindow = Core.getMainWindow()
+            val mainWindow = Core.getMainWindow().apply { lockUI() }
             WeblangPane(mainWindow)
+            mainWindow.unlockUI()
         }
 
         override fun onApplicationShutdown() {

@@ -23,14 +23,15 @@ apply plugin: 'jacoco'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-mainClassName = "pl.weblang.WeblangKt"
+mainClassName = 'pl.weblang.WeblangKt'
 
 sourceSets {
     main.kotlin.srcDirs += 'src/main/kotlin'
+    test.kotlin.srcDirs += 'src/test/kotlin'
 }
 
 jacoco {
-    toolVersion = "0.7.6.201602180812"
+    toolVersion = '0.7.6.201602180812'
     reportsDir = file("$buildDir/reports/jacoco")
 }
 
@@ -47,15 +48,16 @@ test {
         destinationFile = file("$buildDir/reports/jacoco/jacocoTest.exec")
         classDumpFile = file("$buildDir/reports/jacoco/classpathdumps")
     }
+
 }
 
 jar {
     baseName = 'weblang'
     version = '0.0.1-SNAPSHOT'
     manifest {
-        attributes("Implementation-Version": version)
-        attributes("OmegaT-Plugin": "true")
-        attributes(["OmegaT-Plugin": "base"], "pl.weblang.Weblang")
+        attributes('Implementation-Version': version)
+        attributes('OmegaT-Plugin': 'true')
+        attributes(['OmegaT-Plugin': 'base'], 'pl.weblang.Weblang')
     }
 
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
@@ -69,13 +71,20 @@ repositories {
 }
 
 dependencies {
+    // Project
     compile("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}")
-    testCompile "org.jetbrains.kotlin:kotlin-test:${kotlinVersion}"
-    testCompile "org.jetbrains.kotlin:kotlin-test-junit:${kotlinVersion}"
-    testCompile 'io.kotlintest:kotlintest:1.3.5'
-
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    compile 'org.jsoup:jsoup:1.10.1'
+    compile 'com.mashape.unirest:unirest-java:1.4.9'
     // OmegaT 
     compile('org.omegat:omegat:4.0.0-02') { transitive = false }
     compile 'org.omegat:vldocking:3.0.5'
+
+    testCompile "org.jetbrains.kotlin:kotlin-test:${kotlinVersion}"
+    testCompile "org.jetbrains.kotlin:kotlin-test-junit:${kotlinVersion}"
+    testCompile 'io.kotlintest:kotlintest:1.3.5'
+    testCompile 'io.kotlintest:kotlintest:1.3.5'
+    testCompile sourceSets.main.output
 }
 
