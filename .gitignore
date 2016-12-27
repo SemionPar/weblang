@@ -1,8 +1,3 @@
-.gradle
-/build/
-!gradle/wrapper/gradle-wrapper.jar
-.directory
-
 ### STS ###
 .classpath
 .factorypath
@@ -12,6 +7,7 @@
 
 ### IntelliJ IDEA ###
 .idea
+out/
 *.iws
 *.iml
 *.ipr
@@ -23,3 +19,12 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
+
+### Custom ###
+.gradle
+/build/
+!gradle/wrapper/gradle-wrapper.jar
+.directory
+/log.out
+/dependenciesTree.txt
+
