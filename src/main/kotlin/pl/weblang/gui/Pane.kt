@@ -7,10 +7,6 @@ import org.omegat.gui.main.DockableScrollPane
 import org.omegat.gui.main.IMainWindow
 import org.omegat.util.gui.IPaneMenu
 import org.omegat.util.gui.StaticUIUtils
-import org.thymeleaf.TemplateEngine
-import org.thymeleaf.context.Context
-import org.thymeleaf.templatemode.TemplateMode
-import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver
 import pl.weblang.instant.InstantSearchResults
 import java.awt.Desktop
 import java.awt.Dimension
@@ -63,30 +59,11 @@ class Pane(val mainWindow: IMainWindow) : EntryInfoThreadPane<Pane>(true), IPane
     }
 
     fun displayInstantSearchResults(results: InstantSearchResults) {
-        return Context().apply {
-            setVariables(mapOf(Pair("totalCount", results.count),
-                               Pair("entries", results.responses)))
-        }.run { templater.process(this) }
+        val html = templater.process(results)
+        logger().debug { html }
+        text = html
     }
 }
 
 data class KeyAction(val action: () -> Unit, val keyStrokeAndIdPair: Pair<KeyStroke, String>)
-
-class Templater {
-
-    val templateEngine: TemplateEngine = TemplateEngine().apply {
-        addTemplateResolver(ClassLoaderTemplateResolver().apply {
-            order = 1
-            resolvablePatterns = setOf("templates/*")
-            suffix = ".html"
-            templateMode = TemplateMode.HTML
-            isCacheable = false
-        })
-    }
-    val webInstantSearchResultTemplateName = "templates/InstantSearchResults"
-
-    fun process(context: Context): String {
-        return templateEngine.process(webInstantSearchResultTemplateName, context)
-    }
-}
 

@@ -12,7 +12,8 @@ class InstantSearchController(val webIntegrationController: WebIntegrationContro
 }
 
 data class InstantSearchResults(val responses: List<WebInstantSearchResult>) {
-    val count: Long get() = responses.sumByLong { it.count }
+    val count: Long by lazy { responses.sumByLong { it.count } }
+    val empty get() = count == 0L
 }
 
 private fun String.toWords(): List<String> {

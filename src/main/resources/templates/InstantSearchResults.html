@@ -1,18 +1,25 @@
-<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
-
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns="http://www.w3.org/1999/xhtml">
 
-<head>
-    <title>Web instant search</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <!--<link rel="stylesheet" type="text/css" media="all"-->
-    <!--href="../../css/gtvg.css" th:href="@{/css/gtvg.css}"/>-->
-</head>
-
 <body>
 
-<p th:text="#{home.welcome}">Welcome to our grocery store!</p>
+<div>
+    <p th:inline="text"><strong>Total count: [[${results.count}]]</strong></p>
+</div>
+<div>
+    <table th:each="response : ${results.responses}">
+        <tr>
+            <th th:text="${response.name}">Title ...</th>
+        </tr>
+        <tr th:if="${results.empty}">
+            <td colspan="4">No results</td>
+        </tr>
+        <tr th:each="entry : ${response.entries}">
+            <td><a th:href="${entry.link}" th:text="${entry.text}" style="text-decoration: none; color: black;">Text
+                ...</a></td>
+        </tr>
+    </table>
+</div>
 
 </body>
 
