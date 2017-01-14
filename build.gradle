@@ -23,6 +23,11 @@ buildscript {
     }
 }
 
+configurations {
+    omegat
+    compile.extendsFrom omegat
+}
+
 configurations.all {
     resolutionStrategy {
         eachDependency { DependencyResolveDetails details ->
@@ -93,7 +98,11 @@ jar {
         attributes(['OmegaT-Plugin': 'base'], 'pl.weblang.Weblang')
     }
 
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    exclude('org.omegat:omegat:4.0.1')
+
+    from {
+        (configurations.runtime - configurations.omegat).collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
 
 repositories {
@@ -129,8 +138,7 @@ dependencies {
     compile group: 'org.thymeleaf', name: 'thymeleaf', version: '3.0.2.RELEASE'
 
     // OmegaT 
-    compile('org.omegat:omegat:4.0.0-02') { transitive = false }
-    compile 'org.omegat:vldocking:3.0.5'
+    omegat('org.omegat:omegat:4.0.1')
 
     // Test
     testCompile("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")

@@ -15,6 +15,7 @@ import javax.swing.JPopupMenu
 import javax.swing.KeyStroke
 import javax.swing.event.HyperlinkEvent
 
+
 val templater: Templater by lazy { Templater() }
 
 class Pane(val mainWindow: IMainWindow) : EntryInfoThreadPane<Pane>(true), IPaneMenu {

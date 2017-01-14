@@ -5,18 +5,18 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
-import pl.weblang.integration.web.SearchResponse
+import pl.weblang.integration.web.InstantSearchResponse
 
 class GoogleParser {
     companion object : KLogging()
 
-    fun parse(html: String): SearchResponse.ParsedGoogleResponse {
-        val document = Jsoup.parse(html) ?: return SearchResponse.ParsedGoogleResponse.emptyInstance()
+    fun parse(html: String): InstantSearchResponse.ParsedGoogleResponseInstant {
+        val document = Jsoup.parse(html) ?: return InstantSearchResponse.ParsedGoogleResponseInstant.emptyInstance()
         logger.debug { "Parsed html: $document" }
         val page = GooglePage(document)
-        if (page.hasNoResults()) return SearchResponse.ParsedGoogleResponse.emptyInstance()
-        else return SearchResponse.ParsedGoogleResponse(page.parseCount(),
-                                                        page.parseEntries())
+        if (page.hasNoResults()) return InstantSearchResponse.ParsedGoogleResponseInstant.emptyInstance()
+        else return InstantSearchResponse.ParsedGoogleResponseInstant(page.parseCount(),
+                                                                      page.parseEntries())
     }
 }
 

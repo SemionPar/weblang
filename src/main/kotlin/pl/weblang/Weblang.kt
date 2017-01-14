@@ -5,6 +5,7 @@ import org.omegat.core.CoreEvents
 import org.omegat.core.events.IApplicationEventListener
 import org.omegat.core.events.IProjectEventListener
 import org.omegat.gui.main.IMainWindow
+import pl.weblang.background.VerifierService
 import pl.weblang.gui.KeyAction
 import pl.weblang.gui.Pane
 import pl.weblang.gui.SelectionHandler
@@ -21,9 +22,11 @@ class Weblang {
 
     val pane: Pane by lazy { Pane(Core.getMainWindow()) }
     val menu: Menu by lazy { Menu(Core.getMainWindow()) }
-    val selectionHandler = SelectionHandler()
+
     val integrationSettings = IntegrationSettings()
     val integrationManager = IntegrationManager(integrationSettings)
+    val verifierService: VerifierService by lazy { VerifierService(integrationManager.verifierIntegrations()) }
+    val selectionHandler = SelectionHandler()
     val instantSearchController: InstantSearchController by lazy {
         InstantSearchController(WebIntegrationController(integrationManager.instantSearchIntegrations()))
     }
@@ -43,10 +46,12 @@ class Weblang {
             IProjectEventListener.PROJECT_CHANGE_TYPE.CREATE -> {
                 setupPane()
                 setupMenu()
+                startBackgroundVerifierService()
             }
             IProjectEventListener.PROJECT_CHANGE_TYPE.LOAD -> {
                 setupPane()
                 setupMenu()
+                startBackgroundVerifierService()
             }
             IProjectEventListener.PROJECT_CHANGE_TYPE.SAVE -> {
             }
@@ -55,6 +60,10 @@ class Weblang {
             null -> {
             }
         }
+    }
+
+    private fun startBackgroundVerifierService() {
+        verifierService.startBackgroundVerifierService()
     }
 
     private fun setupPane() {

@@ -7,7 +7,7 @@ import mu.KLogging
 import org.apache.http.HttpHeaders
 import org.apache.http.entity.ContentType
 import pl.weblang.integration.web.HttpRequest
-import pl.weblang.integration.web.SearchResponse
+import pl.weblang.integration.web.InstantSearchResponse
 import pl.weblang.integration.web.UnsuccessfulRestCallException
 
 class GoogleApiClient {
@@ -28,10 +28,10 @@ class GoogleApiClient {
         })
     }
 
-    fun search(httpRequest: HttpRequest): SearchResponse.GoogleApiSearchResponse {
+    fun search(httpRequest: HttpRequest): InstantSearchResponse.GoogleApiInstantSearchResponse {
         val request = Unirest.get(httpRequest.url).queryString(httpRequest.queryOptions).header(HttpHeaders.ACCEPT,
                                                                                                 ContentType.APPLICATION_JSON.mimeType)
-        val response = request.asObject(SearchResponse.GoogleApiSearchResponse::class.java)
+        val response = request.asObject(InstantSearchResponse.GoogleApiInstantSearchResponse::class.java)
         if (response.status != 200) {
             logger.warn { "Unsuccessful call. Request: $request, Response: $response" }
             throw UnsuccessfulRestCallException("Status: ${response.status}, url: ${httpRequest.url}, query: ${httpRequest.queryOptions}")
