@@ -3,6 +3,7 @@ package pl.weblang.background
 import kotlinx.coroutines.async
 import kotlinx.coroutines.await
 import mu.KLogging
+import org.litote.kmongo.KMongo
 import org.omegat.core.data.SourceTextEntry
 import org.omegat.core.events.IEntryEventListener
 import org.omegat.tokenizer.ITokenizer
@@ -17,26 +18,35 @@ import kotlin.properties.Delegates
 import kotlin.reflect.KProperty
 
 
-class VerifierService(val verifierIntegrations: List<VerifierIntegrationService>) {
+class VerifierService(verifierIntegrations: List<VerifierIntegrationService>) {
     companion object : KLogging()
-
-    val tokenizer = LuceneEnglishTokenizer()
 
     val verifyPreviouslyProcessedEntry: (KProperty<*>, Segment, Segment) -> Unit = {
         property, old, new ->
-        // don't block UI thread
         thread(name = "segmentChangeProcessor") {
-            // don't trigger if user didn't change anything
-            if (new.source.srcText == new.translation) return@thread
-            val jobResult: JobResult = prepareJob(new)()
-            CoreAdapter.mainWindow.showMessageDialog("Found hits: ${jobResult.results}")
+            if (new.translationIsEqualToSource()) return@thread
+            val jobResult: JobResult = jobBuilder.createJob(new).invoke()
             logger.info { jobResult.results }
-            // save results to database
-
+            SegmentVerification(jobResult, new)
         }
     }
 
-    private fun prepareJob(segment: Segment, timeStamp: Long = System.currentTimeMillis()): () -> JobResult {
+    val editorState: EditorState by lazy {
+        EditorState(verifyPreviouslyProcessedEntry)
+    }
+
+    val processedEntryChangedListener = ProcessedEntryChangedListener(editorState)
+
+    private val jobBuilder: JobBuilder = JobBuilder(LuceneEnglishTokenizer(), verifierIntegrations)
+
+    fun startBackgroundVerifierService() {
+        CoreAdapter.registerEntryEventListener(processedEntryChangedListener)
+    }
+}
+
+class JobBuilder(val tokenizer: LuceneEnglishTokenizer,
+                 val verifierIntegrations: List<VerifierIntegrationService>) {
+    fun createJob(segment: Segment, timeStamp: Long = System.currentTimeMillis()): () -> JobResult {
         val fragments: List<Fragment> = segment.fragmentize(tokenizer, VerifierServiceSettings.FRAGMENT_SIZE)
         return {
             async {
@@ -52,30 +62,17 @@ class VerifierService(val verifierIntegrations: List<VerifierIntegrationService>
         }
     }
 
-
-    val editorState: EditorState by lazy {
-        EditorState(verifyPreviouslyProcessedEntry,
-                    { kProperty: KProperty<*>, segment: Segment, segment1: Segment -> })
-    }
-    val processedEntryChangedListener = ProcessedEntryChangedListener(editorState)
-
-    fun startBackgroundVerifierService() {
-        CoreAdapter.registerEntryEventListener(processedEntryChangedListener)
-    }
 }
 
-class JobResult(val results: Map<List<FragmentResults>, VerifierIntegrationService>, timeStamp: Long) {
+data class Fragment(val wordSequence: List<String>)
+data class JobResult(val results: Map<List<FragmentResults>, VerifierIntegrationService>, val timeStamp: Long)
+data class SegmentVerification(val jobResult: JobResult, val segment: Segment) {
 
 }
 
-data class Fragment(val wordSequence: List<String>) {
-
-}
-
-class EditorState(onPreviousSegmentChangeHandler: (KProperty<*>, Segment, Segment) -> Unit,
-                  onCurrentSegmentChangeHandler: (KProperty<*>, Segment, Segment) -> Unit) {
+class EditorState(onPreviousSegmentChangeHandler: (KProperty<*>, Segment, Segment) -> Unit) {
     var currentlyProcessedFileName: String = CoreAdapter.editor.currentFile
-    var currentlyProcessedSegment: Segment by Delegates.observable(Segment.empty, onCurrentSegmentChangeHandler)
+    var currentlyProcessedSegment: Segment = Segment.empty
     var previouslyProcessedSegment: Segment by Delegates.observable(Segment.empty, onPreviousSegmentChangeHandler)
 }
 
@@ -97,16 +94,17 @@ class ProcessedEntryChangedListener(val editorState: EditorState) : IEntryEventL
 }
 
 object EmptySourceTextEntry {
-    val instance = SourceTextEntry(null, 0, null, null, emptyList())
+    val instance = SourceTextEntry(null, 0, null, "", emptyList())
 }
 
 class Segment(val source: SourceTextEntry,
               val translation: String,
               val fileName: String) {
+    fun translationIsEqualToSource() = this.source.srcText.let { it == translation }
+
     companion object {
         val empty = Segment(EmptySourceTextEntry.instance, "", "")
     }
-
 
     fun fragmentize(tokenizer: LuceneEnglishTokenizer,
                     size: Int = VerifierServiceSettings.FRAGMENT_SIZE): List<Fragment> {
