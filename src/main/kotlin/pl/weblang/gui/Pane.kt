@@ -22,11 +22,11 @@ class Pane(val mainWindow: IMainWindow) : EntryInfoThreadPane<Pane>(true), IPane
     companion object : KLogging()
 
     val title = "Weblang"
-
+    val key = "WEBLANG"
+    val dockableScrollPane: DockableScrollPane = DockableScrollPane(key, title, this, true)
 
     override fun populatePaneMenu(menu: JPopupMenu?) {
     }
-
 
     override fun startSearchThread(p0: SourceTextEntry?) {
     }
@@ -39,7 +39,6 @@ class Pane(val mainWindow: IMainWindow) : EntryInfoThreadPane<Pane>(true), IPane
         isEditable = false
         StaticUIUtils.makeCaretAlwaysVisible(this)
         minimumSize = Dimension(100, 200)
-        mainWindow.addDockable(DockableScrollPane(title, title, this, true))
         contentType = "text/html"
         addHyperlinkListener { event ->
             run {
@@ -53,6 +52,11 @@ class Pane(val mainWindow: IMainWindow) : EntryInfoThreadPane<Pane>(true), IPane
             }
         }
         logger.info { "Weblang pane initiated" }
+    }
+
+    fun addDockable() {
+        mainWindow.addDockable(dockableScrollPane)
+        isVisible = true
     }
 
     fun assignKeyBinding(keyAction: KeyAction) {

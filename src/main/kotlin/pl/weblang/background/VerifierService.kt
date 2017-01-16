@@ -3,7 +3,6 @@ package pl.weblang.background
 import kotlinx.coroutines.async
 import kotlinx.coroutines.await
 import mu.KLogging
-import org.litote.kmongo.KMongo
 import org.omegat.core.data.SourceTextEntry
 import org.omegat.core.events.IEntryEventListener
 import org.omegat.tokenizer.ITokenizer
@@ -24,7 +23,7 @@ class VerifierService(verifierIntegrations: List<VerifierIntegrationService>) {
     val verifyPreviouslyProcessedEntry: (KProperty<*>, Segment, Segment) -> Unit = {
         property, old, new ->
         thread(name = "segmentChangeProcessor") {
-            if (new.translationIsEqualToSource()) return@thread
+            if (new.source.key == null || new.translationIsEqualToSource()) return@thread
             val jobResult: JobResult = jobBuilder.createJob(new).invoke()
             logger.info { jobResult.results }
             SegmentVerification(jobResult, new)

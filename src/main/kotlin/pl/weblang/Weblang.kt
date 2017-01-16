@@ -37,8 +37,8 @@ class Weblang {
     }
 
 
-    private fun createIProjectEventListener(): IProjectEventListener = IProjectEventListener {
-        when (it) {
+    private fun createIProjectEventListener(): IProjectEventListener = IProjectEventListener { event ->
+        when (event) {
             IProjectEventListener.PROJECT_CHANGE_TYPE.CLOSE -> {
             }
             IProjectEventListener.PROJECT_CHANGE_TYPE.COMPILE -> {
@@ -67,7 +67,6 @@ class Weblang {
     }
 
     private fun setupPane() {
-        pane.initializeGui()
         pane.assignKeyBinding(KeyAction({
                                             selectionHandler.selection?.let {
                                                 pane.displayInstantSearchResults(instantSearchController.search(it))
@@ -75,6 +74,7 @@ class Weblang {
                                         },
                                         Pair(KeyStroke.getKeyStroke(KeyEvent.VK_G, 1 shl 7, false),
                                              "instantSearchKeyPressed")))
+        pane.addDockable()
     }
 
     private fun setupMenu() {
@@ -83,7 +83,7 @@ class Weblang {
 
     private fun createIApplicationEventListener(): IApplicationEventListener = object : IApplicationEventListener {
         override fun onApplicationStartup() {
-
+            pane.initializeGui()
         }
 
         override fun onApplicationShutdown() {
