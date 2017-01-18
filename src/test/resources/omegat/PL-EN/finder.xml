@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<items priority="50">
+    <item nopopup="true">
+        <name>Google</name>
+        <url target="both" encoding="default">https://www.google.com/search?q={target}</url>
+        <url target="ascii_only">https://www.google.com/search?q=define%3A{target}</url>
+        <keystroke>ctrl shift F</keystroke>
+    </item>
+    <item>
+        <name>Yahoo</name>
+        <url target="ascii_only">http://search.yahoo.com/search?p={target}</url>
+        <url target="non_ascii_only">http://search.yahoo.co.jp/search?p={target}</url>
+    </item>
+    <item>
+        <name>Google _difinition</name>
+        <url target="ascii_only">https://www.google.com/search?q=Define+{target}</url>
+    </item>
+    <item>
+        <name>Google _patent</name>
+        <url target="ascii_only">https://www.google.com/search?q=Patent+{target}</url>
+    </item>
+</items>
+

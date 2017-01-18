@@ -40,6 +40,7 @@ class Pane(val mainWindow: IMainWindow) : EntryInfoThreadPane<Pane>(true), IPane
         StaticUIUtils.makeCaretAlwaysVisible(this)
         minimumSize = Dimension(100, 200)
         contentType = "text/html"
+        mainWindow.addDockable(dockableScrollPane)
         addHyperlinkListener { event ->
             run {
                 when {
@@ -54,8 +55,7 @@ class Pane(val mainWindow: IMainWindow) : EntryInfoThreadPane<Pane>(true), IPane
         logger.info { "Weblang pane initiated" }
     }
 
-    fun addDockable() {
-        mainWindow.addDockable(dockableScrollPane)
+    fun makeVisible() {
         isVisible = true
     }
 

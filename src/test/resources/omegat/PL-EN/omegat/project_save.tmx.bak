@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tmx SYSTEM "tmx11.dtd">
+<tmx version="1.1">
+  <header creationtool="OmegaT" o-tmf="OmegaT TMX" adminlang="EN-US" datatype="plaintext" creationtoolversion="3.5.3_0_r7969:7974" segtype="sentence" srclang="PL"/>
+  <body>
+<!-- Default translations -->
+    <tu>
+      <tuv lang="PL">
+        <seg>Po tym zdecydowali, że wycieczka szkolna się nie odbędzie.</seg>
+      </tuv>
+      <tuv lang="EN-GB" changeid="iliketodc" changedate="20160621T194058Z" creationid="iliketodc" creationdate="20160621T194058Z">
+        <seg>After that they decided to cancel school journey.</seg>
+      </tuv>
+    </tu>
+<!-- Alternative translations -->
+  </body>
+</tmx>

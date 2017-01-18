@@ -5,6 +5,8 @@ import org.omegat.core.data.IProject
 import org.omegat.core.data.ProjectProperties
 import org.omegat.core.events.IEntryEventListener
 import org.omegat.gui.editor.IEditor
+import org.omegat.gui.glossary.GlossaryManager
+import org.omegat.gui.glossary.IGlossaries
 import org.omegat.gui.main.IMainWindow
 import java.io.File
 
@@ -12,6 +14,8 @@ object CoreAdapter {
     val editor: IEditor get() = org.omegat.core.Core.getEditor()
     val mainWindow: IMainWindow get() = org.omegat.core.Core.getMainWindow()
     val project: IProject get() = org.omegat.core.Core.getProject()
+    val glossary: IGlossaries get() = org.omegat.core.Core.getGlossary()
+    val glossaryManager: GlossaryManager get() = org.omegat.core.Core.getGlossaryManager()
     fun registerEntryEventListener(listener: IEntryEventListener) {
         CoreEvents.registerEntryEventListener(listener)
     }

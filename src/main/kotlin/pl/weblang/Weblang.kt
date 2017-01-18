@@ -74,7 +74,7 @@ class Weblang {
                                         },
                                         Pair(KeyStroke.getKeyStroke(KeyEvent.VK_G, 1 shl 7, false),
                                              "instantSearchKeyPressed")))
-        pane.addDockable()
+        pane.makeVisible()
     }
 
     private fun setupMenu() {

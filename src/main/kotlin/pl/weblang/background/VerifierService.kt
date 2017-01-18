@@ -23,10 +23,11 @@ class VerifierService(verifierIntegrations: List<VerifierIntegrationService>) {
     val verifyPreviouslyProcessedEntry: (KProperty<*>, Segment, Segment) -> Unit = {
         property, old, new ->
         thread(name = "segmentChangeProcessor") {
-            if (new.source.key == null || new.translationIsEqualToSource()) return@thread
-            val jobResult: JobResult = jobBuilder.createJob(new).invoke()
-            logger.info { jobResult.results }
-            SegmentVerification(jobResult, new)
+            if (new.hasInvalidState) return@thread
+            async {
+                CompletableFuture.supplyAsync { sourceSearchDispatcher.start(new) }
+                CompletableFuture.supplyAsync { glossaryTermSearchDispatcher.start(new) }
+            }
         }
     }
 
@@ -36,11 +37,31 @@ class VerifierService(verifierIntegrations: List<VerifierIntegrationService>) {
 
     val processedEntryChangedListener = ProcessedEntryChangedListener(editorState)
 
-    private val jobBuilder: JobBuilder = JobBuilder(LuceneEnglishTokenizer(), verifierIntegrations)
-
     fun startBackgroundVerifierService() {
         CoreAdapter.registerEntryEventListener(processedEntryChangedListener)
     }
+
+    private val jobBuilder: JobBuilder = JobBuilder(LuceneEnglishTokenizer(), verifierIntegrations)
+
+    private val sourceSearchDispatcher = SourceSearchDispatcher(jobBuilder)
+
+    private val glossaryTermSearchDispatcher = GlossaryTermSearchDispatcher(jobBuilder)
+}
+
+class GlossaryTermSearchDispatcher(val jobBuilder: JobBuilder) {
+    fun start(segment: Segment) {
+        CoreAdapter.glossaryManager.getGlossaryEntries(segment.source.srcText)
+    }
+
+}
+
+class SourceSearchDispatcher(val jobBuilder: JobBuilder) {
+    fun start(segment: Segment) {
+        val jobResult: JobResult = jobBuilder.createJob(segment).invoke()
+        VerifierService.logger.info { jobResult.results }
+        SegmentVerification(jobResult, segment)
+    }
+
 }
 
 class JobBuilder(val tokenizer: LuceneEnglishTokenizer,
@@ -99,11 +120,12 @@ object EmptySourceTextEntry {
 class Segment(val source: SourceTextEntry,
               val translation: String,
               val fileName: String) {
-    fun translationIsEqualToSource() = this.source.srcText.let { it == translation }
-
     companion object {
+
         val empty = Segment(EmptySourceTextEntry.instance, "", "")
     }
+
+    val hasInvalidState: Boolean = this.source.key == null || this.translationIsEqualToSource()
 
     fun fragmentize(tokenizer: LuceneEnglishTokenizer,
                     size: Int = VerifierServiceSettings.FRAGMENT_SIZE): List<Fragment> {
@@ -116,6 +138,7 @@ class Segment(val source: SourceTextEntry,
 
     }
 
+    private fun translationIsEqualToSource() = this.source.srcText.let { it == translation }
 }
 
 private fun Array<String>.generateFragment(fragmentSize: Int): List<Fragment> {
