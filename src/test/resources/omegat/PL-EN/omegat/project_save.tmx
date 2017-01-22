@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE tmx SYSTEM "tmx11.dtd">
 <tmx version="1.1">
-  <header creationtool="OmegaT" o-tmf="OmegaT TMX" adminlang="EN-US" datatype="plaintext" creationtoolversion="3.5.3_0_r7969:7974" segtype="sentence" srclang="PL"/>
+  <header creationtool="OmegaT" o-tmf="OmegaT TMX" adminlang="EN-US" datatype="plaintext" creationtoolversion="4.1.1_0_c17a7de" segtype="sentence" srclang="PL"/>
   <body>
 <!-- Default translations -->
+    <tu>
+      <tuv lang="PL">
+        <seg>Oprócz szybkości przejazdu (tylko muldy) oceniane są także elementy akrobatyczne wykonywane podczas przejazdu, np. obroty.</seg>
+      </tuv>
+      <tuv lang="EN-GB" changeid="iliketodc" changedate="20170119T210728Z" creationid="iliketodc" creationdate="20170119T210728Z">
+        <seg>
+Oprócz szybkości przejazdu (tylko muldy) oceniane są także elementy akrobatyczne wykonywane podczas przejazdu, np. obroty.</seg>
+      </tuv>
+    </tu>
     <tu>
       <tuv lang="PL">
         <seg>Po tym zdecydowali, że wycieczka szkolna jednak się odbędzie.</seg>

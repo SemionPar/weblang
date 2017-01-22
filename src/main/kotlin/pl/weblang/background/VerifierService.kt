@@ -41,11 +41,12 @@ class VerifierService(verifierIntegrations: List<VerifierIntegrationService>) {
         CoreAdapter.registerEntryEventListener(processedEntryChangedListener)
     }
 
-    private val jobBuilder: JobBuilder = JobBuilder(LuceneEnglishTokenizer(), verifierIntegrations)
+    private val sourceSearchJobBuilder: SourceSearchJobBuilder = SourceSearchJobBuilder(LuceneEnglishTokenizer(),
+                                                                                        verifierIntegrations)
 
-    private val sourceSearchDispatcher = SourceSearchDispatcher(jobBuilder)
+    private val sourceSearchDispatcher = SourceSearchDispatcher(sourceSearchJobBuilder)
 
-    private val glossaryTermSearchDispatcher = GlossaryTermSearchDispatcher(jobBuilder)
+    private val glossaryTermSearchDispatcher = GlossaryTermSearchDispatcher(sourceSearchJobBuilder)
 }
 
 class GlossaryTermSearchDispatcher(val jobBuilder: JobBuilder) {
@@ -59,14 +60,25 @@ class SourceSearchDispatcher(val jobBuilder: JobBuilder) {
     fun start(segment: Segment) {
         val jobResult: JobResult = jobBuilder.createJob(segment).invoke()
         VerifierService.logger.info { jobResult.results }
-        SegmentVerification(jobResult, segment)
+        SegmentVerificationPersistenceService().create(SegmentVerification(jobResult, segment))
     }
 
 }
 
-class JobBuilder(val tokenizer: LuceneEnglishTokenizer,
-                 val verifierIntegrations: List<VerifierIntegrationService>) {
-    fun createJob(segment: Segment, timeStamp: Long = System.currentTimeMillis()): () -> JobResult {
+class SegmentVerificationPersistenceService {
+    fun create(segmentVerification: SegmentVerification) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+}
+
+interface JobBuilder {
+    fun createJob(segment: Segment, timeStamp: Long = System.currentTimeMillis()): () -> JobResult
+}
+
+class SourceSearchJobBuilder(val tokenizer: LuceneEnglishTokenizer,
+                             val verifierIntegrations: List<VerifierIntegrationService>) : JobBuilder {
+    override fun createJob(segment: Segment, timeStamp: Long): () -> JobResult {
         val fragments: List<Fragment> = segment.fragmentize(tokenizer, VerifierServiceSettings.FRAGMENT_SIZE)
         return {
             async {
