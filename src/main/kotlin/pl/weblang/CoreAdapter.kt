@@ -28,3 +28,13 @@ val ProjectProperties.weblangDir: File
         return weblangDirectory
     }
 
+val IProject.hasDatabaseFile: Boolean
+    get() {
+        return this.databaseFile.isFile
+    }
+
+val IProject.databaseFile: File
+    get() {
+        return File(this.projectProperties.weblangDir, "db")
+    }
+

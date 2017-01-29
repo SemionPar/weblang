@@ -49,7 +49,7 @@ class FileServiceTest : Spek({
                                                  on { resourceFiles } doReturn listOf(getResourceAsResourceFile("txt/source.txt"),
                                                                                       getResourceAsResourceFile("txt/source2.txt"))
                                              }
-                                             val fileService = FileService(fileManager)
+                                             val fileService = FileService(fileManager, "File integration")
 
                                              val results = fileService.verify(Fragment(listOf("After", "that", "they")))
 

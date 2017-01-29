@@ -15,11 +15,12 @@ class IntegrationManager(val settings: IntegrationSettings) {
 
     fun verifierIntegrations(): List<VerifierIntegrationService> {
         if (!settings.VERIFIER_ENABLED) return emptyList()
-        return listOf(FileService(FileManager()))
+        return listOf(FileService(FileManager(), "File service"))
     }
 }
 
 interface VerifierIntegrationService {
+    val name: String
     fun verify(fragment: Fragment): FragmentResults
 }
 

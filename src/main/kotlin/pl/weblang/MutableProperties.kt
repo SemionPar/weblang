@@ -10,7 +10,6 @@ class GoogleSettings {
 
 class VerifierServiceSettings {
     companion object {
-
         val FRAGMENT_SIZE: Int = 3
     }
 }

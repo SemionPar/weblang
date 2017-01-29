@@ -115,6 +115,9 @@ repositories {
     maven {
         url "https://dl.bintray.com/jetbrains/spek"
     }
+    maven {
+        url "https://dl.bintray.com/kotlin/exposed"
+    }
 }
 
 dependencies {
@@ -132,6 +135,9 @@ dependencies {
     compile 'io.github.microutils:kotlin-logging:1.4'
     compile 'com.natpryce:konfig:1.4.2.0'
     compile group: 'org.thymeleaf', name: 'thymeleaf', version: '3.0.2.RELEASE'
+
+    compile 'org.jetbrains.exposed:exposed:0.7.5'
+    compile 'com.h2database:h2:1.4.192'
 
     // OmegaT 
     omegat('org.omegat:omegat:4.0.1')
@@ -169,12 +175,17 @@ task copyJarToOmegatInstallDir(type: Copy) {
     into "../omegat/build/install/OmegaT/plugins/"
 }
 
-if (file("../omegat").isDirectory()) {
-    println("Found sibling project directory: ../omegat. Will run installDist task in omegat project and copy jar to its install directory")
-    clean.dependsOn runOmegatInstallDistTask
-    build.dependsOn runOmegatInstallDistTask
-    build.dependsOn runOmegatInstallDistTask
-    build.finalizedBy(copyJarToOmegatInstallDir)
+task jarWithoutTest(type: GradleBuild) {
+    tasks = ['jar']
+    getStartParameter().setExcludedTaskNames(['check'])
+}
+
+task install() {
+    if (file("../omegat").isDirectory()) {
+        install.dependsOn runOmegatInstallDistTask
+        install.dependsOn jarWithoutTest
+        install.finalizedBy(copyJarToOmegatInstallDir)
+    }
 }
 
 

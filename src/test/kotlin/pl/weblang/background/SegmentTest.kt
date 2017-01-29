@@ -19,7 +19,9 @@ class SegmentTest : Spek({
                                      it("should fragmentize plain sentence") {
                                          val sentence = "Kotlin strings are exactly the same things as Java strings."
                                          val fileName = "fileName"
-                                         val segment = Segment(EmptySourceTextEntry.instance, sentence, fileName)
+                                         val segment = Segment(EmptySourceTextEntry.instance,
+                                                               sentence,
+                                                               fileName)
                                          val size = 3
 
                                          val fragments = segment.fragmentize(tokenizer, size)
@@ -32,7 +34,9 @@ class SegmentTest : Spek({
                                      it("should fragmentize sentence with parenthesis") {
                                          val sentence = "He finally answered (after taking five minutes to think) that he did not understand the question."
                                          val fileName = "fileName"
-                                         val segment = Segment(EmptySourceTextEntry.instance, sentence, fileName)
+                                         val segment = Segment(EmptySourceTextEntry.instance,
+                                                               sentence,
+                                                               fileName)
                                          val size = 3
 
                                          val fragments = segment.fragmentize(tokenizer, size)
@@ -44,17 +48,18 @@ class SegmentTest : Spek({
                                  }
                              }
                              describe("Sentence should be split into logical subgroups according to separator placement") {
+                                 val subgroupTokenizer = SubgroupTokenizer()
                                  it("should divide plain sentence into single subgroup") {
                                      val sentence = "Kotlin strings are exactly the same things as Java strings."
 
-                                     val subgroups = sentence.createLogicalSubgroups()
+                                     val subgroups = subgroupTokenizer.tokenizeToSubgroups(sentence)
 
                                      subgroups.size `should be` 1
                                  }
                                  it("should divide sentence into subgroups") {
                                      val sentence = "The maxim goes \"if you cant win them, join them\" and I (to great extent) disagree with it."
 
-                                     val subgroups = sentence.createLogicalSubgroups()
+                                     val subgroups = subgroupTokenizer.tokenizeToSubgroups(sentence)
 
                                      println(subgroups.joinToString(separator = "|"))
                                      subgroups.size `should be` 5

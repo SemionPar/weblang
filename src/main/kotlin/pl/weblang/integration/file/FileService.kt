@@ -10,7 +10,7 @@ import java.io.File
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
-class FileService(val fileManager: FileManager) : VerifierIntegrationService {
+class FileService(val fileManager: FileManager, override val name: String) : VerifierIntegrationService {
 
     override fun verify(fragment: Fragment): FragmentResults {
         val files = fileManager.resourceFiles

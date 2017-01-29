@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tmx SYSTEM "tmx11.dtd">
+<tmx version="1.1">
+  <header creationtool="OmegaT" o-tmf="OmegaT TMX" adminlang="EN-US" datatype="plaintext" creationtoolversion="4.1.1_0_c17a7de" segtype="sentence" srclang="PL"/>
+  <body>
+<!-- Default translations -->
+    <tu>
+      <tuv lang="PL">
+        <seg>Oprócz szybkości przejazdu (tylko muldy) oceniane są także elementy akrobatyczne wykonywane podczas przejazdu, np. obroty.</seg>
+      </tuv>
+      <tuv lang="EN-GB" changeid="iliketodc" changedate="20170119T210728Z" creationid="iliketodc" creationdate="20170119T210728Z">
+        <seg>
+Oprócz szybkości przejazdu (tylko muldy) oceniane są także elementy akrobatyczne wykonywane podczas przejazdu, np. obroty.</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv lang="PL">
+        <seg>Po tym zdecydowali, że wycieczka szkolna jednak się odbędzie.</seg>
+      </tuv>
+      <tuv lang="EN-GB" changeid="iliketodc" changedate="20160621T204844Z" creationid="iliketodc" creationdate="20160621T204844Z">
+        <seg>After that they decided not to cancel school journey.</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv lang="PL">
+        <seg>Po tym zdecydowali, że wycieczka szkolna się nie odbędzie.</seg>
+      </tuv>
+      <tuv lang="EN-GB" changeid="iliketodc" changedate="20160621T194058Z" creationid="iliketodc" creationdate="20160621T194058Z">
+        <seg>After that they decided to cancel school journey.</seg>
+      </tuv>
+    </tu>
+<!-- Alternative translations -->
+  </body>
+</tmx>

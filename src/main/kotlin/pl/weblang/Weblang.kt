@@ -1,12 +1,11 @@
 package pl.weblang
 
-import org.omegat.core.Core
 import org.omegat.core.CoreEvents
 import org.omegat.core.events.IApplicationEventListener
 import org.omegat.core.events.IProjectEventListener
-import org.omegat.gui.main.IMainWindow
 import pl.weblang.background.VerifierService
 import pl.weblang.gui.KeyAction
+import pl.weblang.gui.Menu
 import pl.weblang.gui.Pane
 import pl.weblang.gui.SelectionHandler
 import pl.weblang.instant.InstantSearchController
@@ -14,14 +13,13 @@ import pl.weblang.integration.IntegrationManager
 import pl.weblang.integration.IntegrationSettings
 import pl.weblang.integration.web.WebIntegrationController
 import java.awt.event.KeyEvent
-import javax.swing.JMenu
 import javax.swing.KeyStroke
 
 
 class Weblang {
 
-    val pane: Pane by lazy { Pane(Core.getMainWindow()) }
-    val menu: Menu by lazy { Menu(Core.getMainWindow()) }
+    val pane: Pane by lazy { Pane(CoreAdapter.mainWindow) }
+    val menu: Menu by lazy { Menu(CoreAdapter.mainWindow) }
 
     val integrationSettings = IntegrationSettings()
     val integrationManager = IntegrationManager(integrationSettings)
@@ -74,7 +72,6 @@ class Weblang {
                                         },
                                         Pair(KeyStroke.getKeyStroke(KeyEvent.VK_G, 1 shl 7, false),
                                              "instantSearchKeyPressed")))
-        pane.makeVisible()
     }
 
     private fun setupMenu() {
@@ -83,21 +80,12 @@ class Weblang {
 
     private fun createIApplicationEventListener(): IApplicationEventListener = object : IApplicationEventListener {
         override fun onApplicationStartup() {
+            pane.addDockable()
             pane.initializeGui()
         }
 
         override fun onApplicationShutdown() {
-
         }
     }
 }
 
-class Menu(val mainWindow: IMainWindow) {
-    fun initializeMenu() {
-        JMenu("Weblang").apply {
-            accessibleContext.accessibleDescription = "Weblang plugin main menu"
-            mnemonic = KeyEvent.VK_G
-            mainWindow.applicationFrame.jMenuBar.add(this)
-        }
-    }
-}
