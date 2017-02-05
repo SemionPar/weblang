@@ -1,5 +1,6 @@
 package pl.weblang.persistence
 
+import mu.KLogging
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.insert
@@ -8,6 +9,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import pl.weblang.background.source.SourceSearchResult
 
 class SegmentVerificationRepository {
+    companion object : KLogging()
 
     object SourceSearchResults : Table() {
         val id = integer("id").autoIncrement().primaryKey()
@@ -31,6 +33,8 @@ class SegmentVerificationRepository {
                 it[timestamp] = sourceSearchResult.timestamp
             }
         }
+        logger.info { "Inserted $sourceSearchResult" }
+
     }
 
     fun retrieveAll(): List<SourceSearchResult> {

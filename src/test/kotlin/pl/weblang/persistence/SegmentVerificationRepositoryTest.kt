@@ -16,7 +16,7 @@ class SegmentVerificationRepositoryTest : Spek({
                                                        val connection = DatabaseConnection(DatabaseMode.TestDatabaseMode())
                                                        val repository = SegmentVerificationRepository()
                                                        beforeEachTest {
-                                                           connection.initializeTable(SegmentVerificationRepository.SourceSearchResults)
+                                                           connection.createTable(SegmentVerificationRepository.SourceSearchResults)
                                                        }
                                                        afterEachTest {
                                                            connection.dropTable(SegmentVerificationRepository.SourceSearchResults)

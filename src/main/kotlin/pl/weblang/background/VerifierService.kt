@@ -7,7 +7,8 @@ import pl.weblang.CoreAdapter
 import pl.weblang.background.forgetful.GlossaryTermSearchDispatcher
 import pl.weblang.background.source.SourceSearchDispatcher
 import pl.weblang.background.source.SourceSearchJobBuilder
-import pl.weblang.databaseFile
+import pl.weblang.databaseName
+import pl.weblang.hasDatabaseFile
 import pl.weblang.integration.VerifierIntegrationService
 import pl.weblang.persistence.DatabaseConnection
 import pl.weblang.persistence.DatabaseMode
@@ -17,12 +18,11 @@ import kotlin.concurrent.thread
 import kotlin.reflect.KProperty
 
 
-class VerifierService(verifierIntegrations: List<VerifierIntegrationService>) {
+class VerifierService(verifierIntegrations: List<VerifierIntegrationService>,
+                      private val segmentVerificationRepository: SegmentVerificationRepository) {
     companion object : KLogging()
 
     var databaseConnection: DatabaseConnection? = null
-
-    val segmentVerificationPersistenceService = SegmentVerificationRepository()
 
     val verifyPreviouslyProcessedEntry: (KProperty<*>, Segment, Segment) -> Unit = {
         property, old, new ->
@@ -31,7 +31,7 @@ class VerifierService(verifierIntegrations: List<VerifierIntegrationService>) {
             async {
                 CompletableFuture.supplyAsync {
                     sourceSearchDispatcher.start(new,
-                                                 segmentVerificationPersistenceService)
+                                                 segmentVerificationRepository)
                 }
                 CompletableFuture.supplyAsync { glossaryTermSearchDispatcher.start(new) }
             }
@@ -51,13 +51,23 @@ class VerifierService(verifierIntegrations: List<VerifierIntegrationService>) {
     val processedEntryChangedListener = ProcessedEntryChangedListener(editorState)
 
     fun startBackgroundVerifierService() {
-        establishConnectionWithProjectDatabase()
+        startDatabase()
         CoreAdapter.registerEntryEventListener(processedEntryChangedListener)
     }
 
+    private fun startDatabase() {
+        if (CoreAdapter.project.hasDatabaseFile) {
+            establishConnectionWithProjectDatabase()
+        } else {
+            establishConnectionWithProjectDatabase()
+            databaseConnection?.createTable(SegmentVerificationRepository.SourceSearchResults)
+        }
+    }
+
     private fun establishConnectionWithProjectDatabase() {
-        databaseConnection = DatabaseConnection(DatabaseMode.ProductionDatabaseMode("jdbc:h2:${CoreAdapter.project.databaseFile.absolutePath}"))
+        databaseConnection = DatabaseConnection(DatabaseMode.ProductionDatabaseMode("jdbc:h2:${CoreAdapter.project.databaseName};DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false"))
     }
 }
+
 
 

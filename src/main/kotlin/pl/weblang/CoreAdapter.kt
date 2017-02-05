@@ -35,6 +35,11 @@ val IProject.hasDatabaseFile: Boolean
 
 val IProject.databaseFile: File
     get() {
-        return File(this.projectProperties.weblangDir, "db")
+        return File(this.projectProperties.weblangDir, "db.mv.db")
+    }
+
+val IProject.databaseName: String
+    get() {
+        return File(this.projectProperties.weblangDir, "db").absolutePath
     }
 

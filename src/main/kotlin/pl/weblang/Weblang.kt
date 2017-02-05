@@ -12,20 +12,25 @@ import pl.weblang.instant.InstantSearchController
 import pl.weblang.integration.IntegrationManager
 import pl.weblang.integration.IntegrationSettings
 import pl.weblang.integration.web.WebIntegrationController
+import pl.weblang.persistence.SegmentVerificationRepository
 import java.awt.event.KeyEvent
 import javax.swing.KeyStroke
 
 
 class Weblang {
 
-    val pane: Pane by lazy { Pane(CoreAdapter.mainWindow) }
-    val menu: Menu by lazy { Menu(CoreAdapter.mainWindow) }
+    private val segmentVerificationRepository = SegmentVerificationRepository()
+    private val pane: Pane by lazy { Pane(CoreAdapter.mainWindow) }
+    private val menu: Menu by lazy { Menu(CoreAdapter.mainWindow, segmentVerificationRepository) }
 
-    val integrationSettings = IntegrationSettings()
-    val integrationManager = IntegrationManager(integrationSettings)
-    val verifierService: VerifierService by lazy { VerifierService(integrationManager.verifierIntegrations()) }
-    val selectionHandler = SelectionHandler()
-    val instantSearchController: InstantSearchController by lazy {
+    private val integrationSettings = IntegrationSettings()
+    private val integrationManager = IntegrationManager(integrationSettings)
+    private val verifierService: VerifierService by lazy {
+        VerifierService(integrationManager.verifierIntegrations(),
+                        segmentVerificationRepository)
+    }
+    private val selectionHandler = SelectionHandler()
+    private val instantSearchController: InstantSearchController by lazy {
         InstantSearchController(WebIntegrationController(integrationManager.instantSearchIntegrations()))
     }
 
