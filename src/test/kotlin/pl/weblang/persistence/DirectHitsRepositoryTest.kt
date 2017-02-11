@@ -7,22 +7,24 @@ import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 import org.junit.platform.runner.JUnitPlatform
 import org.junit.runner.RunWith
-import pl.weblang.background.source.SourceSearchResult
+import pl.weblang.background.source.SourceDirectHit
 
 
 @RunWith(JUnitPlatform::class)
-class SegmentVerificationRepositoryTest : Spek({
+class DirectHitsRepositoryTest : Spek({
                                                    describe("Basic crud operations") {
                                                        val connection = DatabaseConnection(DatabaseMode.TestDatabaseMode())
-                                                       val repository = SegmentVerificationRepository()
+                                                       val repository = DirectHitsRepository()
                                                        beforeEachTest {
-                                                           connection.createTable(SegmentVerificationRepository.SourceSearchResults)
+                                                           connection.createTable(
+                                                                   DirectHitsRepository.SourceSearchResults)
                                                        }
                                                        afterEachTest {
-                                                           connection.dropTable(SegmentVerificationRepository.SourceSearchResults)
+                                                           connection.dropTable(
+                                                                   DirectHitsRepository.SourceSearchResults)
                                                        }
                                                        it("Should create a source search result") {
-                                                           repository.create(SourceSearchResult(
+                                                           repository.create(SourceDirectHit(
                                                                    fragmentSize = 1,
                                                                    fragmentPosition = 15,
                                                                    file = "file",
@@ -32,7 +34,7 @@ class SegmentVerificationRepositoryTest : Spek({
                                                            repository.count() `should be` 1
                                                        }
                                                        it("Should retrieve all source search results") {
-                                                           val sourceSearchResult = SourceSearchResult(
+                                                           val sourceSearchResult = SourceDirectHit(
                                                                    fragmentSize = 1,
                                                                    fragmentPosition = 15,
                                                                    file = "file",

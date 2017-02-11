@@ -6,9 +6,9 @@ import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
-import pl.weblang.background.source.SourceSearchResult
+import pl.weblang.background.source.SourceDirectHit
 
-class SegmentVerificationRepository {
+class DirectHitsRepository {
     companion object : KLogging()
 
     object SourceSearchResults : Table() {
@@ -22,22 +22,22 @@ class SegmentVerificationRepository {
 
     }
 
-    fun create(sourceSearchResult: SourceSearchResult) {
+    fun create(sourceDirectHit: SourceDirectHit) {
         transaction {
             SourceSearchResults.insert {
-                it[fragmentSize] = sourceSearchResult.fragmentSize
-                it[fragmentPosition] = sourceSearchResult.fragmentPosition
-                it[file] = sourceSearchResult.file
-                it[sourceIntegration] = sourceSearchResult.sourceIntegration
-                it[segmentNumber] = sourceSearchResult.segmentNumber
-                it[timestamp] = sourceSearchResult.timestamp
+                it[fragmentSize] = sourceDirectHit.fragmentSize
+                it[fragmentPosition] = sourceDirectHit.fragmentPosition
+                it[file] = sourceDirectHit.file
+                it[sourceIntegration] = sourceDirectHit.sourceIntegration
+                it[segmentNumber] = sourceDirectHit.segmentNumber
+                it[timestamp] = sourceDirectHit.timestamp
             }
         }
-        logger.info { "Inserted $sourceSearchResult" }
+        logger.info { "Inserted $sourceDirectHit" }
 
     }
 
-    fun retrieveAll(): List<SourceSearchResult> {
+    fun retrieveAll(): List<SourceDirectHit> {
         return transaction { SourceSearchResults.selectAll().map { fromRow(it) } }
     }
 
@@ -45,8 +45,8 @@ class SegmentVerificationRepository {
         return retrieveAll().count()
     }
 
-    private fun fromRow(row: ResultRow): SourceSearchResult =
-            SourceSearchResult(row[SourceSearchResults.fragmentSize],
+    private fun fromRow(row: ResultRow): SourceDirectHit =
+            SourceDirectHit(row[SourceSearchResults.fragmentSize],
                                row[SourceSearchResults.fragmentPosition],
                                row[SourceSearchResults.file],
                                row[SourceSearchResults.sourceIntegration],

@@ -1,19 +1,18 @@
 package pl.weblang.gui
 
-import pl.weblang.background.source.SourceSearchResult
-import pl.weblang.persistence.SegmentVerificationRepository
+import pl.weblang.background.source.SourceDirectHit
+import pl.weblang.persistence.DirectHitsRepository
 import javax.swing.table.AbstractTableModel
 import kotlin.reflect.declaredMemberProperties
 import kotlin.reflect.memberProperties
 
-class SourceSearchTableModel(segmentVerificationRepository: SegmentVerificationRepository) : AbstractTableModel() {
+class SourceSearchTableModel(directHitsRepository: DirectHitsRepository) : AbstractTableModel() {
 
-    val sourceSearchResults = segmentVerificationRepository.retrieveAll()
-    private val columnCount = SegmentVerificationRepository.SourceSearchResults.columns.size
-    private val columnNames = SegmentVerificationRepository.SourceSearchResults.columns.onEach(::println).map { it.name }.onEach {
-        println("$it/$columnCount")
-    }.slice(1..(columnCount - 1))
-    private val indexesAndFields = (1..columnCount).zip(SourceSearchResult::class.declaredMemberProperties.map { it.name })
+    val sourceSearchResults = directHitsRepository.retrieveAll()
+    private val columnCount = DirectHitsRepository.SourceSearchResults.columns.size
+    private val columnNames = DirectHitsRepository.SourceSearchResults.columns.map { it.name }.sortedExcludingId()
+    private val indexesAndFields = (1..columnCount).zip(
+            SourceDirectHit::class.declaredMemberProperties.map { it.name }.sortedExcludingId())
 
     override fun getColumnCount(): Int = columnCount - 1
 
@@ -27,4 +26,8 @@ class SourceSearchTableModel(segmentVerificationRepository: SegmentVerificationR
                 result) ?: ""
     }
 
+}
+
+private fun List<String>.sortedExcludingId(): List<String> {
+    return this.sorted().filterNot { it == "id" }
 }

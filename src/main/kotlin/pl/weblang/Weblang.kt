@@ -12,22 +12,26 @@ import pl.weblang.instant.InstantSearchController
 import pl.weblang.integration.IntegrationManager
 import pl.weblang.integration.IntegrationSettings
 import pl.weblang.integration.web.WebIntegrationController
-import pl.weblang.persistence.SegmentVerificationRepository
+import pl.weblang.persistence.DirectHitsRepository
+import pl.weblang.persistence.MissingGlossaryEntryRepository
+import pl.weblang.persistence.SuggestionsRepository
 import java.awt.event.KeyEvent
 import javax.swing.KeyStroke
 
 
 class Weblang {
 
-    private val segmentVerificationRepository = SegmentVerificationRepository()
+    private val directHitsRepository = DirectHitsRepository()
+    private val suggestionsRepository = SuggestionsRepository()
+    private val missingGlossaryEntryRepository = MissingGlossaryEntryRepository()
     private val pane: Pane by lazy { Pane(CoreAdapter.mainWindow) }
-    private val menu: Menu by lazy { Menu(CoreAdapter.mainWindow, segmentVerificationRepository) }
+    private val menu: Menu by lazy { Menu(CoreAdapter.mainWindow, directHitsRepository) }
 
     private val integrationSettings = IntegrationSettings()
     private val integrationManager = IntegrationManager(integrationSettings)
     private val verifierService: VerifierService by lazy {
         VerifierService(integrationManager.verifierIntegrations(),
-                        segmentVerificationRepository)
+                missingGlossaryEntryRepository, directHitsRepository, suggestionsRepository)
     }
     private val selectionHandler = SelectionHandler()
     private val instantSearchController: InstantSearchController by lazy {
@@ -71,12 +75,13 @@ class Weblang {
 
     private fun setupPane() {
         pane.assignKeyBinding(KeyAction({
-                                            selectionHandler.selection?.let {
-                                                pane.displayInstantSearchResults(instantSearchController.search(it))
-                                            }
-                                        },
-                                        Pair(KeyStroke.getKeyStroke(KeyEvent.VK_G, 1 shl 7, false),
-                                             "instantSearchKeyPressed")))
+            selectionHandler.selection?.let {
+                pane.displayInstantSearchResults(instantSearchController.search(it))
+            }
+        },
+                Pair(KeyStroke.getKeyStroke(KeyEvent.VK_G, 1 shl 7, false),
+                        "instantSearchKeyPressed")))
+        pane.addDockable()
     }
 
     private fun setupMenu() {

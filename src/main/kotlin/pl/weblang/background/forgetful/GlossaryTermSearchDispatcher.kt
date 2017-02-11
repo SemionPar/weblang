@@ -1,12 +1,17 @@
 package pl.weblang.background.forgetful
 
-import pl.weblang.CoreAdapter
-import pl.weblang.background.JobBuilder
 import pl.weblang.background.Segment
+import pl.weblang.background.VerifierService
+import pl.weblang.persistence.MissingGlossaryEntryRepository
 
-class GlossaryTermSearchDispatcher(val jobBuilder: JobBuilder) {
+class GlossaryTermSearchDispatcher(val jobBuilder: GlossaryTermSearchJobBuilder,
+                                   val missingGlossaryEntryRepository: MissingGlossaryEntryRepository) {
     fun start(segment: Segment) {
-        CoreAdapter.glossaryManager.getGlossaryEntries(segment.source.srcText)
+        val result = jobBuilder.createJob(segment).invoke()
+        VerifierService.logger.info { result }
+        if (result.anyEntryOmittedInTranslation) {
+            missingGlossaryEntryRepository.create(
+                    MissingGlossaryEntry(result.segment.fileName, result.segment.source.entryNum(), result.timeStamp))
+        }
     }
-
 }

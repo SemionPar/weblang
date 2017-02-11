@@ -14,8 +14,11 @@ class TestUtils {
         fun getResourceAsTokenizedStrings(resourcePath: String): Array<String> = tokenizer.tokenizeWordsToStrings(
                 getResourceAsString(resourcePath),
                 ITokenizer.StemmingMode.NONE)
-        fun getResourceAsResourceFile(resourcePath: String) = ResourceFile(getResource(resourcePath),
-                                                                           getResourceAsTokenizedStrings(resourcePath))
+
+        fun getResourceAsResourceFile(resourcePath: String) = ResourceFile(getResource(
+                resourcePath),
+                getResourceAsTokenizedStrings(
+                        resourcePath))
     }
 
 }

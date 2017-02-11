@@ -6,6 +6,22 @@
 <!-- Default translations -->
     <tu>
       <tuv lang="PL">
+        <seg>Narty używane w tej dyscyplinie są krótsze od nart zjazdowych.</seg>
+      </tuv>
+      <tuv lang="EN-GB" changeid="iliketodc" changedate="20170211T113746Z" creationid="iliketodc" creationdate="20170211T113746Z">
+        <seg>Narty used w tej dyscyplinie są krótsze od nart zjazdowych.</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv lang="PL">
+        <seg>Oprócz szybkości przejazdu (tylko muldy) oceniane są także elementy akrobatyczne wykonywane podczas przejazdu, np. obroty - ten segment zawiera również słowo z glosariusza.</seg>
+      </tuv>
+      <tuv lang="EN-GB" changeid="iliketodc" changedate="20170211T105840Z" creationid="iliketodc" creationdate="20170211T105840Z">
+        <seg>In addition to the speed of the rider we tend to assess the acrobatic figure.</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv lang="PL">
         <seg>Oprócz szybkości przejazdu (tylko muldy) oceniane są także elementy akrobatyczne wykonywane podczas przejazdu, np. obroty.</seg>
       </tuv>
       <tuv lang="EN-GB" changeid="iliketodc" changedate="20170119T210728Z" creationid="iliketodc" creationdate="20170119T210728Z">
