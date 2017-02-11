@@ -43,7 +43,6 @@ class Weblang {
         CoreEvents.registerProjectChangeListener(createIProjectEventListener())
     }
 
-
     private fun createIProjectEventListener(): IProjectEventListener = IProjectEventListener { event ->
         when (event) {
             IProjectEventListener.PROJECT_CHANGE_TYPE.CLOSE -> {

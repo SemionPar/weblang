@@ -13,7 +13,10 @@ class SourceSearchDispatcher(val jobBuilder: SourceSearchJobBuilder,
         val (resultsWithProviders, timeStamp) = jobBuilder.createJob(segment).invoke()
         VerifierService.logger.info { resultsWithProviders }
         for ((segmentResult, verifierServiceProvider) in resultsWithProviders) {
-            segmentResult.directHitResults.flatMap { it.indexAndFile.keys }.filter(Int::isHit).forEach {
+            segmentResult.directHitResults.flatMap { directHitResult
+                ->
+                directHitResult.indexAndFile.keys
+            }.filter(Int::isHit).forEach {
                 directHitsRepository.create(SourceDirectHit(VerifierServiceSettings.FRAGMENT_SIZE,
                         it,
                         segment.fileName,

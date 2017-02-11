@@ -3,9 +3,9 @@ package pl.weblang.integration.file
 import pl.weblang.background.source.Suggestion
 
 fun <T> Array<T>.containsWithWildcards(wordSequence: List<T>): List<Suggestion<T>> {
-    if (size < wordSequence.size) return emptyList()
+    if (this.size < wordSequence.size) return emptyList()
     val wildcards = ArrayList<Suggestion<T>>()
-    for (position in (0..size - wordSequence.size)) {
+    for (position in (0..this.size - wordSequence.size)) {
         val sourceSlice = this.sliceArray(position..(position + (wordSequence.size - 1)))
         val sourceAndSearched = sourceSlice.zip(wordSequence)
         val notEqualPairsCount = sourceAndSearched.filter { it.notEqual() }.count()
