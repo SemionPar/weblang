@@ -42,12 +42,18 @@ class ExactHitsRepository {
 
     }
 
-    fun retrieveAll(): List<ExactHitVO> {
-        return transaction { ExactHitsTable.selectAll().map { fromRow(it) } }
+    fun retrieveAll(): Iterator<ExactHitVO> {
+        return transaction { ExactHitsTable.selectAll().map { fromRow(it) } }.iterator()
     }
 
-    fun count(): Int {
-        return retrieveAll().count()
+    fun getFieldCount(): List<String> {
+        return ExactHitsRepository.ExactHitsTable.columns.
+    }
+
+    fun getValueAt(rowIndex: Int, columnIndex: Int): Any {
+        val result = searchResults[rowIndex]
+        return result.javaClass.kotlin.memberProperties.first { it.name == indexesAndFields[columnIndex].second }.get(
+                result) ?: ""
     }
 
     private fun fromRow(row: ResultRow): ExactHitVO =

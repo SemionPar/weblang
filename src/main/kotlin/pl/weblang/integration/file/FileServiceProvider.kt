@@ -11,7 +11,7 @@ class FileServiceProvider(fileManager: FileManager, override val name: String) :
 
     override fun findWildcardHits(fragment: Fragment): WildcardHit {
 
-        val hits: WildcardHit = WildcardHit(name)
+        val hits: WildcardHit = WildcardHit(this)
         val wordSequence = fragment.wordSequence
 
         for (file in files) {
@@ -24,7 +24,7 @@ class FileServiceProvider(fileManager: FileManager, override val name: String) :
 
     override fun findExactHits(fragment: Fragment): ExactHit {
 
-        val hits: ExactHit = ExactHit(name)
+        val hits: ExactHit = ExactHit(this)
         val wordSequence = fragment.wordSequence
 
         for (file in files) {

@@ -10,9 +10,10 @@ import pl.weblang.CoreAdapter
 class ProcessedEntryChangedListener(val editorState: EditorState) : IEntryEventListener {
 
     override fun onEntryActivated(newEntry: SourceTextEntry?) {
-        val newTranslation = CoreAdapter.editor.currentTranslation
-        editorState.previouslyProcessedSegment = editorState.currentlyProcessedSegment
+        //todo: test for newEntry -> null
         newEntry?.let {
+            val newTranslation = CoreAdapter.editor.currentTranslation
+            editorState.previouslyProcessedSegment = editorState.currentlyProcessedSegment
             editorState.currentlyProcessedSegment = Segment(it, newTranslation, editorState.currentlyProcessedFileName)
         }
     }

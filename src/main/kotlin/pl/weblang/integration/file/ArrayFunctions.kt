@@ -4,7 +4,7 @@ import pl.weblang.background.source.Match
 
 
 /**
- * -1: out of index
+ * @return True if fragment was found in the collection
  */
 val Int.isHit: Boolean
     get() = this != -1
@@ -39,7 +39,7 @@ private fun <A, B> Pair<A, B>.notEqual(): Boolean {
 }
 
 /**
- * -1 if not found, occurrence index otherwise
+ * @return -1 if not found, occurrence index otherwise
  */
 fun <T> Array<T>.containsInOrder(wordSequence: List<T>): Int {
 

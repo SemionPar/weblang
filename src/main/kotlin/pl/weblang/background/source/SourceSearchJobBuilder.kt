@@ -22,8 +22,9 @@ class SourceSearchJobBuilder(val tokenizer: LuceneEnglishTokenizer,
             for (fragment in fragments) {
                 val exactHits = findExactHits(fragment)
                 if (exactHits.isEmpty()) {
-                    val wildcardHits = findWildcardHits(fragment)
-                    fragmentResults.add(FragmentResult(exactHits, wildcardHits))
+                    fragmentResults.add(FragmentResult(exactHits, findWildcardHits(fragment)))
+                } else {
+                    fragmentResults.add(FragmentResult(exactHits))
                 }
             }
 

@@ -20,10 +20,13 @@ class IntegrationManager(val settings: IntegrationSettings) {
     }
 }
 
-interface VerifierServiceProvider {
-    val name: String
+interface VerifierServiceProvider : NamedProvider {
     fun findExactHits(fragment: Fragment): ExactHit
     fun findWildcardHits(fragment: Fragment): WildcardHit
+}
+
+interface NamedProvider {
+    val name: String
 }
 
 

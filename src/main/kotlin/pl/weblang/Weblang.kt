@@ -4,10 +4,7 @@ import org.omegat.core.CoreEvents
 import org.omegat.core.events.IApplicationEventListener
 import org.omegat.core.events.IProjectEventListener
 import pl.weblang.background.BackgroundService
-import pl.weblang.gui.KeyAction
-import pl.weblang.gui.Menu
-import pl.weblang.gui.Pane
-import pl.weblang.gui.SelectionHandler
+import pl.weblang.gui.*
 import pl.weblang.instant.InstantSearchController
 import pl.weblang.integration.IntegrationManager
 import pl.weblang.integration.IntegrationSettings
@@ -24,10 +21,11 @@ import javax.swing.KeyStroke
 class Weblang {
 
     private val directHitsRepository = ExactHitsRepository()
+    private val adapter = ExactHitsViewModel(directHitsRepository)
     private val suggestionsRepository = WildcardHitsRepository()
     private val missingGlossaryEntryRepository = MissingGlossaryEntryRepository()
     private val pane: Pane by lazy { Pane(CoreAdapter.mainWindow) }
-    private val menu: Menu by lazy { Menu(CoreAdapter.mainWindow, directHitsRepository) }
+    private val menu: Menu by lazy { Menu(CoreAdapter.mainWindow, adapter) }
 
     private val integrationSettings = IntegrationSettings()
     private val integrationManager = IntegrationManager(integrationSettings)
@@ -82,7 +80,6 @@ class Weblang {
         },
                 Pair(KeyStroke.getKeyStroke(KeyEvent.VK_G, 1 shl 7, false),
                         "instantSearchKeyPressed")))
-        pane.addDockable()
     }
 
     private fun setupMenu() {

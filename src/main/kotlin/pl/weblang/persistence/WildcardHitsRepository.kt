@@ -46,12 +46,8 @@ class WildcardHitsRepository {
 
     }
 
-    fun retrieveAll(): List<WildcardHitVO> {
-        return transaction { WildcardHitsTable.selectAll().map { fromRow(it) } }
-    }
-
-    fun count(): Int {
-        return retrieveAll().count()
+    fun retrieveAll(): Iterator<WildcardHitVO> {
+        return transaction { WildcardHitsTable.selectAll().map { fromRow(it) } }.iterator()
     }
 
     private fun fromRow(row: ResultRow) =

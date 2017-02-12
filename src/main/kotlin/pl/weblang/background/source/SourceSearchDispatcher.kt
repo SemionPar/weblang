@@ -3,7 +3,6 @@ package pl.weblang.background.source
 import pl.weblang.BackgroundServiceSettings
 import pl.weblang.background.BackgroundService
 import pl.weblang.background.Segment
-import pl.weblang.integration.file.isHit
 import pl.weblang.persistence.ExactHitsRepository
 import pl.weblang.persistence.WildcardHitsRepository
 
@@ -13,9 +12,7 @@ import pl.weblang.persistence.WildcardHitsRepository
 class SourceSearchDispatcher(val jobBuilder: SourceSearchJobBuilder,
                              val exactHitsRepository: ExactHitsRepository,
                              val wildcardHitsRepository: WildcardHitsRepository) {
-    /**
-     *
-     */
+
     fun start(segment: Segment) {
         val (fragmentResults, timeStamp) = runJob(segment)
 
@@ -39,14 +36,14 @@ class SourceSearchDispatcher(val jobBuilder: SourceSearchJobBuilder,
             for ((fileName, matches) in wildcardHit.entries) {
                 matches.forEach {
                     wildcardHitsRepository.create(WildcardHitVO(BackgroundServiceSettings.FRAGMENT_SIZE,
-                            it.positionInSource,
-                            it.wildcardPosition,
-                            it.sourceSlice.joinToString(" ", "...", "..."),
-                            segment.fileName,
-                            wildcardHit.providerName,
-                            fileName,
-                            segment.source.entryNum(),
-                            timeStamp))
+                                                                it.positionInSource,
+                                                                it.wildcardPosition,
+                                                                it.sourceSlice.joinToString(" ", "...", "..."),
+                                                                segment.fileName,
+                                                                wildcardHit.providerName,
+                                                                fileName,
+                                                                segment.source.entryNum(),
+                                                                timeStamp))
                 }
             }
         }
@@ -56,15 +53,14 @@ class SourceSearchDispatcher(val jobBuilder: SourceSearchJobBuilder,
                                  segment: Segment,
                                  timeStamp: Long) {
         for (exactHit in exactHits) {
-            val hits = exactHit.entries.filter { it.value.isHit }
-            for ((fileName, index) in hits) {
+            for ((fileName, index) in exactHit.hitEntries) {
                 exactHitsRepository.create(ExactHitVO(BackgroundServiceSettings.FRAGMENT_SIZE,
-                        index,
-                        segment.fileName,
-                        exactHit.providerName,
-                        fileName,
-                        segment.source.entryNum(),
-                        timeStamp))
+                                                      index,
+                                                      segment.fileName,
+                                                      exactHit.providerName,
+                                                      fileName,
+                                                      segment.source.entryNum(),
+                                                      timeStamp))
             }
         }
     }

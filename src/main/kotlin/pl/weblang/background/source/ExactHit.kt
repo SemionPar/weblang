@@ -1,16 +1,18 @@
 package pl.weblang.background.source
 
+import pl.weblang.integration.NamedProvider
 import pl.weblang.integration.file.isHit
 
 /**
  * Contains map of filenames and indexes of first occurrences.
  */
-class ExactHit(val providerName: String) {
+class ExactHit(private val namedProvider: NamedProvider) {
 
     private val fileWithIndex: MutableMap<String, Int> = mutableMapOf()
 
-    val entries: Set<Map.Entry<String, Int>> get() = fileWithIndex.entries
+    val hitEntries: Iterator<Map.Entry<String, Int>> get() = fileWithIndex.entries.filter { it.value.isHit }.iterator()
 
+    val providerName get() = namedProvider.name
     /**
      * Is there at least one hit in any of the files.
      */

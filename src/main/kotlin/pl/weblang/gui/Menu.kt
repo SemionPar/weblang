@@ -1,7 +1,6 @@
 package pl.weblang.gui
 
 import org.omegat.gui.main.IMainWindow
-import pl.weblang.persistence.ExactHitsRepository
 import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
 import javax.swing.JMenu
@@ -9,7 +8,7 @@ import javax.swing.JMenuItem
 import javax.swing.KeyStroke
 
 
-class Menu(val mainWindow: IMainWindow, private val exactHitsRepository: ExactHitsRepository) {
+class Menu(val mainWindow: IMainWindow, private val adapter: ExactHitsViewModel) {
     fun initializeMenu() {
         val menu = JMenu("Weblang").apply {
             accessibleContext.accessibleDescription = "Weblang plugin main menu"
@@ -19,7 +18,7 @@ class Menu(val mainWindow: IMainWindow, private val exactHitsRepository: ExactHi
         menu.add(JMenuItem("Background search", KeyEvent.VK_B).apply {
             accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_1, ActionEvent.ALT_MASK)
             accessibleContext.accessibleDescription = "Show background search results"
-            addActionListener(BackgroundSearchResultsPane(exactHitsRepository))
+            addActionListener(BackgroundSearchResultsPane(adapter))
         })
 
     }
