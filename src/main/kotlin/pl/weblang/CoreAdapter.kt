@@ -10,6 +10,9 @@ import org.omegat.gui.glossary.IGlossaries
 import org.omegat.gui.main.IMainWindow
 import java.io.File
 
+/**
+ * Adapter for Core OmegaT API
+ */
 object CoreAdapter {
     val editor: IEditor get() = org.omegat.core.Core.getEditor()
     val mainWindow: IMainWindow get() = org.omegat.core.Core.getMainWindow()

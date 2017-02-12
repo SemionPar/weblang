@@ -3,7 +3,7 @@ package pl.weblang
 import org.omegat.core.CoreEvents
 import org.omegat.core.events.IApplicationEventListener
 import org.omegat.core.events.IProjectEventListener
-import pl.weblang.background.VerifierService
+import pl.weblang.background.BackgroundService
 import pl.weblang.gui.KeyAction
 import pl.weblang.gui.Menu
 import pl.weblang.gui.Pane
@@ -12,25 +12,27 @@ import pl.weblang.instant.InstantSearchController
 import pl.weblang.integration.IntegrationManager
 import pl.weblang.integration.IntegrationSettings
 import pl.weblang.integration.web.WebIntegrationController
-import pl.weblang.persistence.DirectHitsRepository
+import pl.weblang.persistence.ExactHitsRepository
 import pl.weblang.persistence.MissingGlossaryEntryRepository
-import pl.weblang.persistence.SuggestionsRepository
+import pl.weblang.persistence.WildcardHitsRepository
 import java.awt.event.KeyEvent
 import javax.swing.KeyStroke
 
-
+/**
+ * Main plugin class
+ */
 class Weblang {
 
-    private val directHitsRepository = DirectHitsRepository()
-    private val suggestionsRepository = SuggestionsRepository()
+    private val directHitsRepository = ExactHitsRepository()
+    private val suggestionsRepository = WildcardHitsRepository()
     private val missingGlossaryEntryRepository = MissingGlossaryEntryRepository()
     private val pane: Pane by lazy { Pane(CoreAdapter.mainWindow) }
     private val menu: Menu by lazy { Menu(CoreAdapter.mainWindow, directHitsRepository) }
 
     private val integrationSettings = IntegrationSettings()
     private val integrationManager = IntegrationManager(integrationSettings)
-    private val verifierService: VerifierService by lazy {
-        VerifierService(integrationManager.verifierIntegrations(),
+    private val backgroundService: BackgroundService by lazy {
+        BackgroundService(integrationManager.verifierIntegrations(),
                 missingGlossaryEntryRepository, directHitsRepository, suggestionsRepository)
     }
     private val selectionHandler = SelectionHandler()
@@ -69,7 +71,7 @@ class Weblang {
     }
 
     private fun startBackgroundVerifierService() {
-        verifierService.startBackgroundVerifierService()
+        backgroundService.startBackgroundVerifierService()
     }
 
     private fun setupPane() {

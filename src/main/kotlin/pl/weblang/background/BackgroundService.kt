@@ -6,8 +6,8 @@ import kotlinx.coroutines.experimental.launch
 import mu.KLogging
 import org.omegat.tokenizer.LuceneEnglishTokenizer
 import pl.weblang.CoreAdapter
-import pl.weblang.background.forgetful.GlossaryTermSearchDispatcher
-import pl.weblang.background.forgetful.GlossaryTermSearchJobBuilder
+import pl.weblang.background.forgetful.GlossarySearchDispatcher
+import pl.weblang.background.forgetful.GlossarySearchJobBuilder
 import pl.weblang.background.source.SourceSearchDispatcher
 import pl.weblang.background.source.SourceSearchJobBuilder
 import pl.weblang.databaseName
@@ -16,11 +16,14 @@ import pl.weblang.integration.VerifierServiceProvider
 import pl.weblang.persistence.*
 import kotlin.reflect.KProperty
 
+/**
+ * Handles background search jobs
+ */
+class BackgroundService(verifierProviders: List<VerifierServiceProvider>,
+                        missingGlossaryEntryRepository: MissingGlossaryEntryRepository,
+                        exactHitsRepository: ExactHitsRepository,
+                        wildcardHitsRepository: WildcardHitsRepository) {
 
-class VerifierService(verifierProviders: List<VerifierServiceProvider>,
-                      missingGlossaryEntryRepository: MissingGlossaryEntryRepository,
-                      directHitsRepository: DirectHitsRepository,
-                      suggestionsRepository: SuggestionsRepository) {
     companion object : KLogging()
 
     var databaseConnection: DatabaseConnection? = null
@@ -32,14 +35,20 @@ class VerifierService(verifierProviders: List<VerifierServiceProvider>,
     val sourceSearchJobBuilder: SourceSearchJobBuilder = SourceSearchJobBuilder(
             LuceneEnglishTokenizer(),
             verifierProviders)
-    val glossaryTermSearchJobBuilder: GlossaryTermSearchJobBuilder = GlossaryTermSearchJobBuilder()
-    val sourceSearchDispatcher = SourceSearchDispatcher(sourceSearchJobBuilder, directHitsRepository,
-            suggestionsRepository)
-    val glossaryTermSearchDispatcher = GlossaryTermSearchDispatcher(glossaryTermSearchJobBuilder,
+
+    val glossarySearchJobBuilder: GlossarySearchJobBuilder = GlossarySearchJobBuilder()
+
+    val sourceSearchDispatcher = SourceSearchDispatcher(sourceSearchJobBuilder, exactHitsRepository,
+            wildcardHitsRepository)
+
+    val glossarySearchDispatcher = GlossarySearchDispatcher(glossarySearchJobBuilder,
             missingGlossaryEntryRepository)
 
     val processedEntryChangedListener = ProcessedEntryChangedListener(editorState)
 
+    /**
+     * Start listening for events
+     */
     fun startBackgroundVerifierService() {
         startDatabase()
         CoreAdapter.registerEntryEventListener(processedEntryChangedListener)
@@ -51,7 +60,7 @@ class VerifierService(verifierProviders: List<VerifierServiceProvider>,
             if (!new.hasInvalidState) {
                 launch(CommonPool) {
                     future { sourceSearchDispatcher.start(new) }
-                    future { glossaryTermSearchDispatcher.start(new) }
+                    future { glossarySearchDispatcher.start(new) }
                 }
             }
         }
@@ -62,7 +71,9 @@ class VerifierService(verifierProviders: List<VerifierServiceProvider>,
             establishConnectionWithProjectDatabase()
         } else {
             establishConnectionWithProjectDatabase()
-            databaseConnection?.createTable(DirectHitsRepository.SourceSearchResults)
+            databaseConnection?.createTable(ExactHitsRepository.ExactHitsTable)
+            databaseConnection?.createTable(WildcardHitsRepository.WildcardHitsTable)
+            databaseConnection?.createTable(MissingGlossaryEntryRepository.MissingGlossaryEntriesTable)
         }
     }
 

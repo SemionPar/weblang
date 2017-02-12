@@ -25,7 +25,7 @@ class FileServiceTest : Spek({
 
                 val results = fileService.findExactHits(Fragment(listOf("After", "that", "they")))
 
-                results.anyHit `should be` true
+                results.hasAnyHit() `should be` true
             }
         }
     }

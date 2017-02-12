@@ -1,8 +1,8 @@
 package pl.weblang.integration
 
 import pl.weblang.background.Fragment
-import pl.weblang.background.source.DirectHitResults
-import pl.weblang.background.source.SuggestionsPerSource
+import pl.weblang.background.source.ExactHit
+import pl.weblang.background.source.WildcardHit
 import pl.weblang.integration.file.FileManager
 import pl.weblang.integration.file.FileServiceProvider
 import pl.weblang.integration.web.InstantSearchResponse
@@ -22,8 +22,8 @@ class IntegrationManager(val settings: IntegrationSettings) {
 
 interface VerifierServiceProvider {
     val name: String
-    fun findExactHits(fragment: Fragment): DirectHitResults
-    fun findWildcardHits(fragment: Fragment): List<SuggestionsPerSource>
+    fun findExactHits(fragment: Fragment): ExactHit
+    fun findWildcardHits(fragment: Fragment): WildcardHit
 }
 
 
@@ -38,3 +38,4 @@ class IntegrationSettings {
     var VERIFIER_ENABLED: Boolean = true
 
 }
+

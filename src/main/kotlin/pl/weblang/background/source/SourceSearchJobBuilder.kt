@@ -1,35 +1,47 @@
 package pl.weblang.background.source
 
-import kotlinx.coroutines.experimental.runBlocking
 import org.omegat.tokenizer.LuceneEnglishTokenizer
-import pl.weblang.VerifierServiceSettings
+import pl.weblang.BackgroundServiceSettings
 import pl.weblang.background.Fragment
 import pl.weblang.background.Segment
 import pl.weblang.integration.VerifierServiceProvider
 
+/**
+ * Builds jobs for source search
+ */
 class SourceSearchJobBuilder(val tokenizer: LuceneEnglishTokenizer,
                              val verifierProviders: List<VerifierServiceProvider>) {
+    /**
+     * Creates function with job tu run
+     */
     fun createJob(segment: Segment, timeStamp: Long = System.currentTimeMillis()): () -> SourceSearchJobResult {
-        val fragments: List<Fragment> = segment.fragmentize(tokenizer, VerifierServiceSettings.FRAGMENT_SIZE)
+        val fragments: List<Fragment> = segment.fragmentize(tokenizer, BackgroundServiceSettings.FRAGMENT_SIZE)
         return {
-            runBlocking {
-                val results = fragments.map { fragment ->
-                    val directHitResults = verifierProviders.map { it.findExactHits(fragment) }
-                    val suggestions: List<ProviderSuggestions>
-                    if (directHitResults.none { it.anyHit }) {
-                        suggestions = verifierProviders.map {
-                            ProviderSuggestions(it.findWildcardHits(fragment), it)
-                        }
-                        SegmentResult(directHitResults, suggestions)
-                    } else {
-                        SegmentResult(directHitResults)
-                    }
+            val fragmentResults = mutableListOf<FragmentResult>()
+
+            for (fragment in fragments) {
+                val exactHits = findExactHits(fragment)
+                if (exactHits.isEmpty()) {
+                    val wildcardHits = findWildcardHits(fragment)
+                    fragmentResults.add(FragmentResult(exactHits, wildcardHits))
                 }
-                SourceSearchJobResult(results.mapIndexed { index, segmentResult ->
-                    ProviderResult(segmentResult, verifierProviders[index])
-                }, timeStamp)
             }
+
+            SourceSearchJobResult(fragmentResults, timeStamp)
         }
+    }
+
+    private fun findWildcardHits(fragment: Fragment): List<WildcardHit> {
+        return verifierProviders
+                .map { it.findWildcardHits(fragment) }
+                .toList()
+    }
+
+    private fun findExactHits(fragment: Fragment): List<ExactHit> {
+        return verifierProviders
+                .map { it.findExactHits(fragment) }
+                .filter { it.hasAnyHit() }
+                .toList()
     }
 
 }

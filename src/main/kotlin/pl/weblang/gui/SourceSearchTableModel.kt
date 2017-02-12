@@ -1,18 +1,18 @@
 package pl.weblang.gui
 
-import pl.weblang.background.source.SourceDirectHit
-import pl.weblang.persistence.DirectHitsRepository
+import pl.weblang.background.source.ExactHitVO
+import pl.weblang.persistence.ExactHitsRepository
 import javax.swing.table.AbstractTableModel
 import kotlin.reflect.declaredMemberProperties
 import kotlin.reflect.memberProperties
 
-class SourceSearchTableModel(directHitsRepository: DirectHitsRepository) : AbstractTableModel() {
+class SourceSearchTableModel(exactHitsRepository: ExactHitsRepository) : AbstractTableModel() {
 
-    val sourceSearchResults = directHitsRepository.retrieveAll()
-    private val columnCount = DirectHitsRepository.SourceSearchResults.columns.size
-    private val columnNames = DirectHitsRepository.SourceSearchResults.columns.map { it.name }.sortedExcludingId()
+    val sourceSearchResults = exactHitsRepository.retrieveAll()
+    private val columnCount = ExactHitsRepository.ExactHitsTable.columns.size
+    private val columnNames = ExactHitsRepository.ExactHitsTable.columns.map { it.name }.sortedExcludingId()
     private val indexesAndFields = (1..columnCount).zip(
-            SourceDirectHit::class.declaredMemberProperties.map { it.name }.sortedExcludingId())
+            ExactHitVO::class.declaredMemberProperties.map { it.name }.sortedExcludingId())
 
     override fun getColumnCount(): Int = columnCount - 1
 

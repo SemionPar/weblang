@@ -6,6 +6,9 @@ import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.transactions.transaction
 
+/**
+ * Database wrapper
+ */
 class DatabaseConnection(mode: DatabaseMode) {
     companion object : KLogging()
 
@@ -30,6 +33,9 @@ class DatabaseConnection(mode: DatabaseMode) {
     }
 }
 
+/**
+ * Start database in test or production mode
+ */
 sealed class DatabaseMode {
     abstract val dataSource: String
 

@@ -8,10 +8,13 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import pl.weblang.background.forgetful.MissingGlossaryEntry
 
+/**
+ * Repository for missing glossary terms
+ */
 class MissingGlossaryEntryRepository {
     companion object : KLogging()
 
-    object MissingGlossaryEntries : Table() {
+    object MissingGlossaryEntriesTable : Table() {
         val id = integer("id").autoIncrement().primaryKey()
         val file = text("file")
         val segmentNumber = integer("segment_number")
@@ -21,7 +24,7 @@ class MissingGlossaryEntryRepository {
 
     fun create(missingGlossaryEntry: MissingGlossaryEntry) {
         transaction {
-            MissingGlossaryEntries.insert {
+            MissingGlossaryEntriesTable.insert {
                 it[file] = missingGlossaryEntry.file
                 it[segmentNumber] = missingGlossaryEntry.segmentNumber
                 it[timestamp] = missingGlossaryEntry.timestamp
@@ -32,7 +35,7 @@ class MissingGlossaryEntryRepository {
     }
 
     fun retrieveAll(): List<MissingGlossaryEntry> {
-        return transaction { MissingGlossaryEntries.selectAll().map { fromRow(it) } }
+        return transaction { MissingGlossaryEntriesTable.selectAll().map { fromRow(it) } }
     }
 
     fun count(): Int {
@@ -40,8 +43,8 @@ class MissingGlossaryEntryRepository {
     }
 
     private fun fromRow(row: ResultRow): MissingGlossaryEntry =
-            MissingGlossaryEntry(row[MissingGlossaryEntries.file],
-                    row[MissingGlossaryEntries.segmentNumber],
-                    row[MissingGlossaryEntries.timestamp])
+            MissingGlossaryEntry(row[MissingGlossaryEntriesTable.file],
+                    row[MissingGlossaryEntriesTable.segmentNumber],
+                    row[MissingGlossaryEntriesTable.timestamp])
 
 }

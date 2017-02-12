@@ -5,7 +5,7 @@ import org.apache.commons.lang.StringUtils
 import pl.weblang.CoreAdapter
 import pl.weblang.background.Segment
 
-class GlossaryTermSearchJobBuilder {
+class GlossarySearchJobBuilder {
 
     val topRangeMultiplier = 1.1
     val bottomRangeMultiplier = 0.9

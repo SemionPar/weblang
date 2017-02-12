@@ -1,28 +1,35 @@
 package pl.weblang.integration.file
 
 import pl.weblang.background.Fragment
-import pl.weblang.background.source.DirectHitResults
+import pl.weblang.background.source.ExactHit
+import pl.weblang.background.source.WildcardHit
 import pl.weblang.integration.VerifierServiceProvider
 
-class FileServiceProvider(val fileManager: FileManager, override val name: String) : VerifierServiceProvider {
+class FileServiceProvider(fileManager: FileManager, override val name: String) : VerifierServiceProvider {
 
-    override fun findWildcardHits(fragment: Fragment): List<SuggestionsPerSource> {
-        val files = fileManager.resourceFiles
-        return files.map {
-            val suggestions = it.tokenizedToWords.containsWithWildcards(fragment.wordSequence)
-            SuggestionsPerSource(suggestions, it)
+    private val files: List<ResourceFile> = fileManager.resourceFiles
+
+    override fun findWildcardHits(fragment: Fragment): WildcardHit {
+
+        val hits: WildcardHit = WildcardHit(name)
+        val wordSequence = fragment.wordSequence
+
+        for (file in files) {
+            val match = file.containsWithWildcards(wordSequence)
+            hits.put(file.fileName(), match)
         }
-    }\
 
-    override fun findExactHits(fragment: Fragment): DirectHitResults {
+        return hits
+    }
 
-        val files = fileManager.resourceFiles
-        val hits: DirectHitResults = DirectHitResults()
+    override fun findExactHits(fragment: Fragment): ExactHit {
+
+        val hits: ExactHit = ExactHit(name)
         val wordSequence = fragment.wordSequence
 
         for (file in files) {
             val indexOfHit = file.containsInOrder(wordSequence)
-            if (indexOfHit != -1) {
+            if (indexOfHit.isHit) {
                 hits.put(file.fileName(), indexOfHit)
             }
         }

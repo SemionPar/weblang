@@ -4,6 +4,9 @@ import org.omegat.core.data.SourceTextEntry
 import org.omegat.core.events.IEntryEventListener
 import pl.weblang.CoreAdapter
 
+/**
+ * Listens to changes of processed entries
+ */
 class ProcessedEntryChangedListener(val editorState: EditorState) : IEntryEventListener {
 
     override fun onEntryActivated(newEntry: SourceTextEntry?) {

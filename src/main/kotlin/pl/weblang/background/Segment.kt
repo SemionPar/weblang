@@ -3,7 +3,7 @@ package pl.weblang.background
 import org.omegat.core.data.SourceTextEntry
 import org.omegat.tokenizer.ITokenizer
 import org.omegat.tokenizer.LuceneEnglishTokenizer
-import pl.weblang.VerifierServiceSettings
+import pl.weblang.BackgroundServiceSettings
 
 class Segment(val source: SourceTextEntry,
               val translation: String,
@@ -16,7 +16,7 @@ class Segment(val source: SourceTextEntry,
     val hasInvalidState: Boolean = this.source.key == null || this.translationIsEqualToSource()
 
     fun fragmentize(tokenizer: LuceneEnglishTokenizer,
-                    size: Int = VerifierServiceSettings.FRAGMENT_SIZE): List<Fragment> {
+                    size: Int = BackgroundServiceSettings.FRAGMENT_SIZE): List<Fragment> {
         return subgroupTokenizer.tokenizeToSubgroups(translation).map {
             tokenizer.tokenizeWordsToStrings(it, ITokenizer.StemmingMode.NONE)
         }.filter { it.size >= size }.map { it.generateFragment(size) }.flatten()
