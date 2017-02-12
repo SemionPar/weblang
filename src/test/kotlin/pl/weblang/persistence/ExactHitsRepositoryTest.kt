@@ -9,19 +9,16 @@ import org.junit.platform.runner.JUnitPlatform
 import org.junit.runner.RunWith
 import pl.weblang.background.source.ExactHitVO
 
-
 @RunWith(JUnitPlatform::class)
 class ExactHitsRepositoryTest : Spek({
     describe("Basic crud operations") {
         val connection = DatabaseConnection(DatabaseMode.TestDatabaseMode())
         val repository = ExactHitsRepository()
         beforeEachTest {
-            connection.createTable(
-                    ExactHitsRepository.ExactHitsTable)
+            connection.createTable(ExactHitsRepository.ExactHitsTable)
         }
         afterEachTest {
-            connection.dropTable(
-                    ExactHitsRepository.ExactHitsTable)
+            connection.dropTable(ExactHitsRepository.ExactHitsTable)
         }
         it("Should create a source search result") {
             repository.create(ExactHitVO(
@@ -32,7 +29,7 @@ class ExactHitsRepositoryTest : Spek({
                     sourceIntegrationFileName = "sourceIntegrationFileName",
                     segmentNumber = 12,
                     timestamp = 123154123L))
-            repository.count() `should be` 1
+            repository.retrieveAll().asSequence().count() `should be` 1
         }
         it("Should retrieve all source search results") {
             val sourceSearchResult = ExactHitVO(
@@ -46,11 +43,9 @@ class ExactHitsRepositoryTest : Spek({
 
             repository.create(sourceSearchResult)
 
-            val results = repository.retrieveAll()
-            results.size `should be` 1
+            val results = repository.retrieveAll().asSequence()
             results.first() `should equal` sourceSearchResult
         }
     }
 })
-
 

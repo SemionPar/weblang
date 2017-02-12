@@ -66,4 +66,3 @@ class SourceSearchDispatcher(val jobBuilder: SourceSearchJobBuilder,
     }
 }
 
-

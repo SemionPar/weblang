@@ -14,7 +14,7 @@ class GoogleScrapingClientTest : FlatSpec() {
             val page = client.search(GoogleRequest(listOf("pets")))
             page.splitToSequence(' ').toList() should contain("Google")
         }
-        "Google client" should "handle sequence as exact match"{
+        "Google client" should "handle sequence as exact match" {
             val exactMatch = listOf("man", "in", "the", "box")
             val page = client.search(GoogleRequest(exactMatch))
             page.contains(exactMatch.reduce { s1, s2 -> s1 + " " + s2 }, true) shouldBe true

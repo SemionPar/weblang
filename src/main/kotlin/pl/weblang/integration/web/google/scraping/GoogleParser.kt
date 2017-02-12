@@ -129,7 +129,7 @@ private fun Element.extract(selector: (Element) -> Elements, extractor: (Element
     try {
         val extraction = extractor.invoke(selectedElements)
         return extraction
-    } catch(e: Exception) {
+    } catch (e: Exception) {
         GoogleParser.logger.info { e }
         throw ExtractionException("Could not use extractor on selected elements")
     }
@@ -138,7 +138,6 @@ private fun Element.extract(selector: (Element) -> Elements, extractor: (Element
 class ExtractionException(message: String) : RuntimeException(message)
 
 class SelectorException(message: String) : RuntimeException(message)
-
 
 fun String.parseFirstNumber(): Long {
     val firstDigit: Char = this.find(Char::isDigit) ?: throw ParseException("No digit was found in the resultStats")

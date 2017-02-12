@@ -29,7 +29,6 @@ interface NamedProvider {
     val name: String
 }
 
-
 interface InstantIntegrationService {
     fun processInstantRequest(searchedPhrase: List<String>): InstantSearchResponse
 

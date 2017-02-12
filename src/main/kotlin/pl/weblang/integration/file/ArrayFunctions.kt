@@ -2,7 +2,6 @@ package pl.weblang.integration.file
 
 import pl.weblang.background.source.Match
 
-
 /**
  * @return True if fragment was found in the collection
  */

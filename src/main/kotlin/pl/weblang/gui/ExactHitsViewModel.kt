@@ -1,30 +1,33 @@
 package pl.weblang.gui
 
+import com.google.common.collect.Lists
 import pl.weblang.background.source.ExactHitVO
 import pl.weblang.persistence.ExactHitsRepository
-import kotlin.reflect.declaredMemberProperties
-import kotlin.reflect.memberProperties
+import kotlin.reflect.full.declaredMemberProperties
+import kotlin.reflect.full.memberProperties
 
-class ExactHitsViewModel(exactHitsRepository: ExactHitsRepository) {
+/**
+ * Adapts ExactHits for table display
+ */
+class ExactHitsViewModel(private val exactHitsRepository: ExactHitsRepository) {
 
-    val searchResults = listOf(exactHitsRepository.retrieveAll())
-    private val columnNames = ExactHitsRepository.ExactHitsTable.columns.map { it.name }.sortedExcludingId()
-    private val indexesAndFields = (1..columnCount).zip(
-            ExactHitVO::class.declaredMemberProperties.map { it.name }.sortedExcludingId())
+    private val entries get() = Lists.newArrayList(exactHitsRepository.retrieveAll())
 
-    fun getColumnCount(): Int = searchResults.size - 1
+    fun getColumnCount(): Int = exactHitsRepository.getFieldNames().size - 1
 
-    fun getColumnName(column: Int): String = columnNames[column]
-    fun getRowCount(): Int = searchResults.size
+    fun getColumnName(column: Int): String = exactHitsRepository.getFieldNames().sortedExcludingId()[column]
+
+    fun getRowCount(): Int = entries.size
 
     fun getValueAt(rowIndex: Int, columnIndex: Int): Any {
-        val result = searchResults[rowIndex]
-        return result.javaClass.kotlin.memberProperties.first { it.name == indexesAndFields[columnIndex].second }.get(
-                result) ?: ""
+        val row = entries[rowIndex]
+        val classFieldNames = ExactHitVO::class.declaredMemberProperties
+                .map { it.name }
+                .sortedExcludingId()
+        return row.javaClass.kotlin.memberProperties.first { it.name == classFieldNames[columnIndex] }.get(row) ?: ""
     }
 
     private fun List<String>.sortedExcludingId(): List<String> {
         return this.sorted().filterNot { it == "id" }
     }
-
 }

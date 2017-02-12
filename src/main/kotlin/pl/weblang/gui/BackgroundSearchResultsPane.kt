@@ -14,7 +14,7 @@ class BackgroundSearchResultsPane(private val adapter: ExactHitsViewModel) : JFr
     override fun actionPerformed(e: ActionEvent?) {
         minimumSize = Dimension(650, 400)
         isVisible = true
-        val table = JTable(SourceSearchTableModel(adapter))
+        val table = JTable(TableModel(adapter))
         table.preferredScrollableViewportSize = Dimension(500, 70)
         table.fillsViewportHeight = true
         add(JScrollPane(table))

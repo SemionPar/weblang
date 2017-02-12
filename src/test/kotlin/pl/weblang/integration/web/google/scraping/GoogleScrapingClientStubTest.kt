@@ -10,7 +10,6 @@ import pl.weblang.integration.web.UnsuccessfulRestCallException
 import pl.weblang.integration.web.google.GoogleRequest
 import kotlin.test.assertFailsWith
 
-
 class GoogleScrapingClientStubTest {
 
     val client = GoogleScrapingClient()

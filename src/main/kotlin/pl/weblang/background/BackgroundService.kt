@@ -83,5 +83,3 @@ class BackgroundService(verifierProviders: List<VerifierServiceProvider>,
     }
 }
 
-
-

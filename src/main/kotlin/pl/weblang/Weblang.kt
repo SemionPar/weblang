@@ -21,9 +21,11 @@ import javax.swing.KeyStroke
 class Weblang {
 
     private val directHitsRepository = ExactHitsRepository()
-    private val adapter = ExactHitsViewModel(directHitsRepository)
     private val suggestionsRepository = WildcardHitsRepository()
     private val missingGlossaryEntryRepository = MissingGlossaryEntryRepository()
+
+    private val adapter: ExactHitsViewModel by lazy { ExactHitsViewModel(directHitsRepository) }
+
     private val pane: Pane by lazy { Pane(CoreAdapter.mainWindow) }
     private val menu: Menu by lazy { Menu(CoreAdapter.mainWindow, adapter) }
 
@@ -38,6 +40,9 @@ class Weblang {
         InstantSearchController(WebIntegrationController(integrationManager.instantSearchIntegrations()))
     }
 
+    /**
+     * Register listeners in OmegaT
+     */
     init {
         CoreEvents.registerApplicationEventListener(createIApplicationEventListener())
         CoreEvents.registerProjectChangeListener(createIProjectEventListener())

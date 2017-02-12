@@ -7,7 +7,6 @@ import javax.swing.JMenu
 import javax.swing.JMenuItem
 import javax.swing.KeyStroke
 
-
 class Menu(val mainWindow: IMainWindow, private val adapter: ExactHitsViewModel) {
     fun initializeMenu() {
         val menu = JMenu("Weblang").apply {
