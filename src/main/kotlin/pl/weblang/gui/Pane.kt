@@ -1,5 +1,6 @@
 package pl.weblang.gui
 
+import kotlinx.coroutines.experimental.future.future
 import mu.KLogging
 import org.omegat.gui.main.DockableScrollPane
 import org.omegat.gui.main.IMainWindow
@@ -8,11 +9,9 @@ import org.omegat.util.gui.StaticUIUtils
 import pl.weblang.instant.InstantSearchResults
 import java.awt.Desktop
 import java.awt.Dimension
-import javax.swing.JComponent
-import javax.swing.JPopupMenu
-import javax.swing.JTextPane
-import javax.swing.KeyStroke
+import javax.swing.*
 import javax.swing.event.HyperlinkEvent
+
 
 val templater: Templater by lazy { Templater() }
 
@@ -66,10 +65,24 @@ class Pane(val mainWindow: IMainWindow) : JTextPane(), IPaneMenu {
         pl.weblang.gui.KeyBinding(getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW), actionMap, keyAction)
     }
 
+    fun clear() {
+        text = ""
+    }
+
     fun displayInstantSearchResults(results: InstantSearchResults) {
-        val html = templater.generateHtml(results)
-        logger().debug { html }
-        text = html
+
+        val futureHtml = future {
+            templater.generateHtml(results)
+        }
+
+        val loading = ImageIcon("img/ajax-loader.gif")
+        add(JLabel("tupot",loading, JLabel.CENTER))
+
+        if (!futureHtml.isCompletedExceptionally) {
+            val html = futureHtml.join()
+            logger.debug { html }
+            text = html
+        }
     }
 
 }

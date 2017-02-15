@@ -25,19 +25,19 @@ class ExactHitsRepository : Repository<ExactHitVO> {
         val timestamp = long("timestamp")
     }
 
-    override fun create(exactHitVO: ExactHitVO) {
+    override fun create(entity: ExactHitVO) {
         transaction {
             ExactHitsTable.insert {
-                it[fragmentSize] = exactHitVO.fragmentSize
-                it[fragmentPosition] = exactHitVO.fragmentPosition
-                it[file] = exactHitVO.file
-                it[sourceIntegration] = exactHitVO.sourceIntegration
-                it[sourceIntegrationFileName] = exactHitVO.sourceIntegrationFileName
-                it[segmentNumber] = exactHitVO.segmentNumber
-                it[timestamp] = exactHitVO.timestamp
+                it[fragmentSize] = entity.fragmentSize
+                it[fragmentPosition] = entity.fragmentPosition
+                it[file] = entity.file
+                it[sourceIntegration] = entity.sourceIntegration
+                it[sourceIntegrationFileName] = entity.sourceIntegrationFileName
+                it[segmentNumber] = entity.segmentNumber
+                it[timestamp] = entity.timestamp
             }
         }
-        logger.info { "Inserted $exactHitVO" }
+        logger.info { "Inserted $entity" }
 
     }
 

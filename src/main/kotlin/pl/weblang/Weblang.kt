@@ -102,6 +102,7 @@ class Weblang {
         val shortcut = Shortcut(CtrlG, shortcutKey)
         return KeyAction({
             selectionHandler.selection?.let {
+                pane.clear()
                 pane.displayInstantSearchResults(instantSearchController.search(it))
             }
         }, shortcut)
