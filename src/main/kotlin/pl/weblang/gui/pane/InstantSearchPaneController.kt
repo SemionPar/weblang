@@ -1,4 +1,4 @@
-package pl.weblang.gui
+package pl.weblang.gui.pane
 
 import kotlinx.coroutines.experimental.future.future
 import mu.KLogging
@@ -6,6 +6,8 @@ import org.omegat.gui.main.DockableScrollPane
 import org.omegat.gui.main.IMainWindow
 import org.omegat.util.gui.IPaneMenu
 import org.omegat.util.gui.StaticUIUtils
+import pl.weblang.gui.KeyBinding
+import pl.weblang.gui.Templater
 import pl.weblang.instant.InstantSearchResults
 import java.awt.Desktop
 import java.awt.Dimension
@@ -15,8 +17,11 @@ import javax.swing.event.HyperlinkEvent
 
 val templater: Templater by lazy { Templater() }
 
-class Pane(val mainWindow: IMainWindow) : JTextPane(), IPaneMenu {
+class InstantSearchPaneController(val mainWindow: IMainWindow) : JTextPane(), IPaneMenu {
     companion object : KLogging()
+
+    private val textPane = JTextPane()
+    private val graphicPane = JFrame()
 
     val title = "Weblang"
     val key = "WEBLANG"
@@ -58,11 +63,12 @@ class Pane(val mainWindow: IMainWindow) : JTextPane(), IPaneMenu {
 
     fun addDockable() {
         mainWindow.addDockable(DockableScrollPane(key, title, this, true).apply { dockableScrollPane = this })
+        dockableScrollPane.
         logger.info { "Weblang pane added as dockable" }
     }
 
     fun assignKeyBinding(keyAction: KeyAction) {
-        pl.weblang.gui.KeyBinding(getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW), actionMap, keyAction)
+        KeyBinding(getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW), actionMap, keyAction)
     }
 
     fun clear() {
@@ -76,7 +82,7 @@ class Pane(val mainWindow: IMainWindow) : JTextPane(), IPaneMenu {
         }
 
         val loading = ImageIcon("img/ajax-loader.gif")
-        add(JLabel("tupot",loading, JLabel.CENTER))
+        add(JLabel("tupot", loading, JLabel.CENTER))
 
         if (!futureHtml.isCompletedExceptionally) {
             val html = futureHtml.join()
@@ -84,7 +90,6 @@ class Pane(val mainWindow: IMainWindow) : JTextPane(), IPaneMenu {
             text = html
         }
     }
-
 }
 
 data class KeyAction(val action: () -> Unit, val shortcut: Shortcut)
