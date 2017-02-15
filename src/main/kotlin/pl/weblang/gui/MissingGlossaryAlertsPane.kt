@@ -1,6 +1,8 @@
 package pl.weblang.gui
 
+import com.google.common.collect.Lists
 import mu.KLogging
+import org.omegat.core.Core
 import pl.weblang.background.forgetful.MissingGlossaryEntry
 import pl.weblang.persistence.MissingGlossaryEntryRepository
 import java.awt.BorderLayout
@@ -11,8 +13,12 @@ import java.awt.event.ActionListener
 import javax.swing.*
 
 class MissingGlossaryAlertsPane(private val adapter: ViewModel<MissingGlossaryEntry>,
-                                val missingGlossaryEntryRepository: MissingGlossaryEntryRepository) : JFrame(), ActionListener {
+                                private val missingGlossaryEntryRepository: MissingGlossaryEntryRepository) : JFrame(), ActionListener {
     companion object : KLogging()
+
+    private val entries: List<MissingGlossaryEntry> get() =
+    Lists.newArrayList<MissingGlossaryEntry>(
+            missingGlossaryEntryRepository.retrieveAll().iterator())
 
     override fun actionPerformed(e: ActionEvent?) {
         minimumSize = Dimension(800, 300)
@@ -39,21 +45,31 @@ class MissingGlossaryAlertsPane(private val adapter: ViewModel<MissingGlossaryEn
         val contentPane = contentPane
         contentPane.layout = FlowLayout()
 
-        val data = mutableListOf<String>()
-        missingGlossaryEntryRepository.retrieveAll().forEach {
-            data.add("File: ${it.file}, Semment: File: ${it.segmentNumber}")
+        val segmentLabels = mutableListOf<String>()
+        entries.forEach {
+            segmentLabels.add("File: ${it.file}, Semment: File: ${it.segmentNumber}")
         }
 
-        val list = JList(data.toTypedArray())
+        val list = JList(segmentLabels.toTypedArray())
 
         list.addListSelectionListener { event ->
             if (event.valueIsAdjusting)
                 return@addListSelectionListener
             logger.info { "Selected: " + list.selectedValue }
 
-//            Core.getEditor().gotoFile()
+            val segment = Core.getEditor()
+            val selectedEntry = entries[list.selectedIndex]
+            segment.gotoFile(resolveFileIndexByName(selectedEntry.file))
+            segment.gotoEntry(selectedEntry.segmentNumber)
+
         }
         contentPane.add(JScrollPane(list), BorderLayout.CENTER)
+    }
+
+    fun resolveFileIndexByName(fileName: String): Int {
+        val projectFiles = Core.getProject().projectFiles
+        val file = projectFiles.find { it.filePath.endsWith(fileName) }
+        return projectFiles.indexOf(file)
     }
 
 }
