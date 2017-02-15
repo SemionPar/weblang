@@ -6,6 +6,9 @@ import org.omegat.core.events.IProjectEventListener
 import pl.weblang.background.BackgroundService
 import pl.weblang.background.source.ExactHitVO
 import pl.weblang.gui.*
+import pl.weblang.gui.pane.KeyAction
+import pl.weblang.gui.pane.InstantSearchPaneController
+import pl.weblang.gui.pane.Shortcut
 import pl.weblang.instant.InstantSearchController
 import pl.weblang.integration.IntegrationManager
 import pl.weblang.integration.IntegrationSettings
@@ -27,7 +30,7 @@ class Weblang {
 
     private val adapter: ViewModel<ExactHitVO> by lazy { ExactHitsViewModel(exactHitsRepository) }
 
-    private val pane: Pane by lazy { Pane(CoreAdapter.mainWindow) }
+    private val instantSearchPaneController: InstantSearchPaneController by lazy { InstantSearchPaneController(CoreAdapter.mainWindow) }
     private val menu: Menu by lazy { Menu(CoreAdapter.mainWindow, adapter, missingGlossaryEntryRepository) }
 
     private val integrationSettings = IntegrationSettings()
@@ -76,8 +79,8 @@ class Weblang {
 
     private fun createIApplicationEventListener(): IApplicationEventListener = object : IApplicationEventListener {
         override fun onApplicationStartup() {
-            pane.addDockable()
-            pane.initializeGui()
+            instantSearchPaneController.addDockable()
+            instantSearchPaneController.initializeGui()
         }
 
         override fun onApplicationShutdown() {
@@ -89,7 +92,7 @@ class Weblang {
     }
 
     private fun setupPane() {
-        pane.assignKeyBinding(setupInstantSearchKeyAction())
+        instantSearchPaneController.assignKeyBinding(setupInstantSearchKeyAction())
     }
 
     private fun setupMenu() {
@@ -102,7 +105,8 @@ class Weblang {
         val shortcut = Shortcut(CtrlG, shortcutKey)
         return KeyAction({
             selectionHandler.selection?.let {
-                pane.displayInstantSearchResults(instantSearchController.search(it))
+                instantSearchPaneController.clear()
+                instantSearchPaneController.displayInstantSearchResults(instantSearchController.search(it))
             }
         }, shortcut)
     }

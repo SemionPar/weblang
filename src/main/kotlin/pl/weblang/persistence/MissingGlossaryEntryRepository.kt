@@ -21,18 +21,16 @@ class MissingGlossaryEntryRepository : Repository<MissingGlossaryEntry> {
         val timestamp = long("timestamp")
     }
 
-    override fun create(missingGlossaryEntry: MissingGlossaryEntry) {
+    override fun create(entity: MissingGlossaryEntry) {
         transaction {
             MissingGlossaryEntriesTable.insert {
-                it[file] = missingGlossaryEntry.file
-                it[segmentNumber] = missingGlossaryEntry.segmentNumber
-                it[timestamp] = missingGlossaryEntry.timestamp
+                it[file] = entity.file
+                it[segmentNumber] = entity.segmentNumber
+                it[timestamp] = entity.timestamp
             }
         }
-        logger.info { "Inserted $missingGlossaryEntry" }
-
+        logger.info { "Inserted $entity" }
     }
-
 
     override fun getFieldNames(): List<String> {
         return MissingGlossaryEntriesTable.columns.map { it.name }
