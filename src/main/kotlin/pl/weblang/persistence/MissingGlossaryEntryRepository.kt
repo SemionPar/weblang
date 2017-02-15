@@ -11,7 +11,7 @@ import pl.weblang.background.forgetful.MissingGlossaryEntry
 /**
  * Repository for missing glossary terms
  */
-class MissingGlossaryEntryRepository {
+class MissingGlossaryEntryRepository : Repository<MissingGlossaryEntry> {
     companion object : KLogging()
 
     object MissingGlossaryEntriesTable : Table() {
@@ -21,7 +21,7 @@ class MissingGlossaryEntryRepository {
         val timestamp = long("timestamp")
     }
 
-    fun create(missingGlossaryEntry: MissingGlossaryEntry) {
+    override fun create(missingGlossaryEntry: MissingGlossaryEntry) {
         transaction {
             MissingGlossaryEntriesTable.insert {
                 it[file] = missingGlossaryEntry.file
@@ -33,12 +33,13 @@ class MissingGlossaryEntryRepository {
 
     }
 
-    fun retrieveAll(): List<MissingGlossaryEntry> {
-        return transaction { MissingGlossaryEntriesTable.selectAll().map { fromRow(it) } }
+
+    override fun getFieldNames(): List<String> {
+        return MissingGlossaryEntriesTable.columns.map { it.name }
     }
 
-    fun count(): Int {
-        return retrieveAll().count()
+    override fun retrieveAll(): Iterator<MissingGlossaryEntry> {
+        return transaction { MissingGlossaryEntriesTable.selectAll().map { fromRow(it) } }.iterator()
     }
 
     private fun fromRow(row: ResultRow): MissingGlossaryEntry =

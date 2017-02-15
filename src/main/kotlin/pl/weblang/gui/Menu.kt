@@ -1,7 +1,9 @@
 package pl.weblang.gui
 
 import org.omegat.gui.main.IMainWindow
+import pl.weblang.background.forgetful.MissingGlossaryEntry
 import pl.weblang.background.source.ExactHitVO
+import pl.weblang.persistence.MissingGlossaryEntryRepository
 import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
 import javax.swing.JMenu
@@ -11,7 +13,9 @@ import javax.swing.KeyStroke
 /**
  * Plugin menu
  */
-class Menu(val mainWindow: IMainWindow, private val adapter: ViewModel<ExactHitVO>) {
+class Menu(val mainWindow: IMainWindow,
+           private val adapter: ViewModel<ExactHitVO>,
+           private val missingGlossaryEntryRepository: MissingGlossaryEntryRepository) {
 
     /**
      * Setup menu items
@@ -27,8 +31,15 @@ class Menu(val mainWindow: IMainWindow, private val adapter: ViewModel<ExactHitV
             accessibleContext.accessibleDescription = "Show background search results"
             addActionListener(BackgroundSearchResultsPane(adapter))
         })
+        menu.add(JMenuItem("Omitted glossary term alerts", KeyEvent.VK_G).apply {
+            accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_1, ActionEvent.ALT_MASK)
+            accessibleContext.accessibleDescription = "Show omitted glossary term alerts"
+            val adapter: ViewModel<MissingGlossaryEntry> = WildcardHitsViewModel(missingGlossaryEntryRepository)
+            addActionListener(MissingGlossaryAlertsPane(adapter, missingGlossaryEntryRepository))
+        })
 
     }
+
 }
 
 

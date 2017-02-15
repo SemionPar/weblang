@@ -28,7 +28,7 @@ class Weblang {
     private val adapter: ViewModel<ExactHitVO> by lazy { ExactHitsViewModel(exactHitsRepository) }
 
     private val pane: Pane by lazy { Pane(CoreAdapter.mainWindow) }
-    private val menu: Menu by lazy { Menu(CoreAdapter.mainWindow, adapter) }
+    private val menu: Menu by lazy { Menu(CoreAdapter.mainWindow, adapter, missingGlossaryEntryRepository) }
 
     private val integrationSettings = IntegrationSettings()
     private val integrationManager = IntegrationManager(integrationSettings)
