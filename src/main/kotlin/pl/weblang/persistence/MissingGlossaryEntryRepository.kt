@@ -19,7 +19,6 @@ class MissingGlossaryEntryRepository {
         val file = text("file")
         val segmentNumber = integer("segment_number")
         val timestamp = long("timestamp")
-
     }
 
     fun create(missingGlossaryEntry: MissingGlossaryEntry) {

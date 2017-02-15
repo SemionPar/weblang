@@ -13,12 +13,12 @@ class ProcessedEntryChangedListener(val editorState: EditorState) : IEntryEventL
         //todo: test for newEntry -> null
         newEntry?.let {
             val newTranslation = CoreAdapter.editor.currentTranslation
-            editorState.previouslyProcessedSegment = editorState.currentlyProcessedSegment
-            editorState.currentlyProcessedSegment = Segment(it, newTranslation, editorState.currentlyProcessedFileName)
+            editorState.previouslyProcessedSegment = editorState.processedSegment
+            editorState.processedSegment = Segment(it, newTranslation, editorState.processedFileName)
         }
     }
 
     override fun onNewFile(activeFileName: String?) {
-        activeFileName?.let { editorState.currentlyProcessedFileName = activeFileName }
+        activeFileName?.let { editorState.processedFileName = activeFileName }
     }
 }

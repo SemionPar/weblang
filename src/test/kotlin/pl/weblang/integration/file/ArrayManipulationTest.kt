@@ -8,7 +8,7 @@ import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 import org.junit.platform.runner.JUnitPlatform
 import org.junit.runner.RunWith
-import pl.weblang.background.source.Match
+import pl.weblang.background.source.WildcardMatch
 
 @RunWith(JUnitPlatform::class)
 class ArrayManipulationTest : Spek({
@@ -46,17 +46,17 @@ class ArrayManipulationTest : Spek({
             it("should match wildcard in 0 position (* x x)") {
                 val wordSequence = listOf("*", "which", "is")
                 val result = source.containsWithWildcards(wordSequence)
-                result `should equal` listOf(Match(2, 0, arrayOf("test", "which", "is")))
+                result `should equal` listOf(WildcardMatch(2, 0, arrayOf("test", "which", "is")))
             }
             it("should match wildcard in 1 position (x * x)") {
                 val wordSequence = listOf("which", "*", "fun")
                 val result = source.containsWithWildcards(wordSequence)
-                result `should equal` listOf(Match(3, 1, arrayOf("which", "is", "fun")))
+                result `should equal` listOf(WildcardMatch(3, 1, arrayOf("which", "is", "fun")))
             }
             it("should match wildcard in 2 position (x x *)") {
                 val wordSequence = listOf("test", "which", "*")
                 val result = source.containsWithWildcards(wordSequence)
-                result `should equal` listOf(Match(2, 2, arrayOf("test", "which", "is")))
+                result `should equal` listOf(WildcardMatch(2, 2, arrayOf("test", "which", "is")))
             }
         }
         context("Array contains another array with multiple matches") {
@@ -64,22 +64,22 @@ class ArrayManipulationTest : Spek({
                 val source = arrayOf("this", "is", "test", "which", "is", "fun", "too", "and", "which", "is", "not")
                 val wordSequence = listOf("*", "which", "is")
                 val result = source.containsWithWildcards(wordSequence)
-                result `should equal` listOf<Match<String>>(Match(2, 0, arrayOf("test", "which", "is")),
-                        Match(7, 0, arrayOf("and", "which", "is")))
+                result `should equal` listOf<WildcardMatch<String>>(WildcardMatch(2, 0, arrayOf("test", "which", "is")),
+                        WildcardMatch(7, 0, arrayOf("and", "which", "is")))
             }
             it("should match wildcard in 1 position (x * x)") {
                 val source = arrayOf("0", "1", "2", "which", "blah", "fun", "6", "7", "which", "blah", "fun")
                 val wordSequence = listOf("which", "*", "fun")
                 val result = source.containsWithWildcards(wordSequence)
-                result `should equal` listOf(Match(3, 1, arrayOf("which", "blah", "fun")),
-                        Match(8, 1, arrayOf("which", "blah", "fun")))
+                result `should equal` listOf(WildcardMatch(3, 1, arrayOf("which", "blah", "fun")),
+                        WildcardMatch(8, 1, arrayOf("which", "blah", "fun")))
             }
             it("should match wildcard in 2 position (x x *)") {
                 val source = arrayOf("0", "1", "2", "which", "fun", "blah", "6", "7", "which", "fun", "blah")
                 val wordSequence = listOf("which", "fun", "*")
                 val result = source.containsWithWildcards(wordSequence)
-                result `should equal` listOf(Match(3, 2, arrayOf("which", "fun", "blah")),
-                        Match(8, 2, arrayOf("which", "fun", "blah")))
+                result `should equal` listOf(WildcardMatch(3, 2, arrayOf("which", "fun", "blah")),
+                        WildcardMatch(8, 2, arrayOf("which", "fun", "blah")))
             }
         }
     }

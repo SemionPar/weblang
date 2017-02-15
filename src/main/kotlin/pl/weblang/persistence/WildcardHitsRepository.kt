@@ -25,7 +25,6 @@ class WildcardHitsRepository {
         val sourceIntegrationFileName = text("source_integration_file_name")
         val segmentNumber = integer("segment_number")
         val timestamp = long("timestamp")
-
     }
 
     fun create(wildcardHitVO: WildcardHitVO) {

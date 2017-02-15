@@ -11,7 +11,7 @@ import pl.weblang.background.source.ExactHitVO
 /**
  * Repository for exact hits
  */
-class ExactHitsRepository {
+class ExactHitsRepository : Repository<ExactHitVO> {
     companion object : KLogging()
 
     object ExactHitsTable : Table() {
@@ -23,10 +23,9 @@ class ExactHitsRepository {
         val sourceIntegrationFileName = text("source_integration_file_name")
         val segmentNumber = integer("segment_number")
         val timestamp = long("timestamp")
-
     }
 
-    fun create(exactHitVO: ExactHitVO) {
+    override fun create(exactHitVO: ExactHitVO) {
         transaction {
             ExactHitsTable.insert {
                 it[fragmentSize] = exactHitVO.fragmentSize
@@ -42,11 +41,11 @@ class ExactHitsRepository {
 
     }
 
-    fun retrieveAll(): Iterator<ExactHitVO> {
+    override fun retrieveAll(): Iterator<ExactHitVO> {
         return transaction { ExactHitsTable.selectAll().map { fromRow(it) } }.iterator()
     }
 
-    fun getFieldNames(): List<String> {
+    override fun getFieldNames(): List<String> {
         return ExactHitsRepository.ExactHitsTable.columns.map { it.name }
     }
 

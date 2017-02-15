@@ -1,6 +1,6 @@
 package pl.weblang.integration.file
 
-import pl.weblang.background.source.Match
+import pl.weblang.background.source.WildcardMatch
 import java.io.File
 
 /**
@@ -17,7 +17,7 @@ data class ResourceFile(val file: File, val tokenizedToWords: Array<String>) {
         return tokenizedToWords.containsInOrder(wordSequence)
     }
 
-    fun containsWithWildcards(wordSequence: List<String>): List<Match<String>> {
+    fun containsWithWildcards(wordSequence: List<String>): List<WildcardMatch<String>> {
         return tokenizedToWords.containsWithWildcards(wordSequence)
     }
 }

@@ -40,5 +40,7 @@ sealed class DatabaseMode {
     abstract val dataSource: String
 
     data class TestDatabaseMode(override val dataSource: String = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1") : DatabaseMode()
-    data class ProductionDatabaseMode(override val dataSource: String) : DatabaseMode()
+    data class ProductionDatabaseMode(private val databaseName: String) : DatabaseMode() {
+        override val dataSource: String = "jdbc:h2:$databaseName;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false"
+    }
 }

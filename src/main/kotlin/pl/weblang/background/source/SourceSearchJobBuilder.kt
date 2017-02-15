@@ -10,12 +10,12 @@ import pl.weblang.integration.VerifierServiceProvider
  * Builds jobs for source search
  */
 class SourceSearchJobBuilder(val tokenizer: LuceneEnglishTokenizer,
-                             val verifierProviders: List<VerifierServiceProvider>) {
+                             val verifierProviders: Iterable<VerifierServiceProvider>) {
     /**
      * Creates function with job tu run
      */
     fun createJob(segment: Segment, timeStamp: Long = System.currentTimeMillis()): () -> SourceSearchJobResult {
-        val fragments: List<Fragment> = segment.fragmentize(tokenizer, BackgroundServiceSettings.FRAGMENT_SIZE)
+        val fragments: Iterable<Fragment> = segment.fragmentize(tokenizer, BackgroundServiceSettings.FRAGMENT_SIZE)
         return {
             val fragmentResults = mutableListOf<FragmentResult>()
 

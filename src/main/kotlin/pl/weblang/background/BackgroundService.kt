@@ -22,21 +22,22 @@ import kotlin.reflect.KProperty
 class BackgroundService(verifierProviders: List<VerifierServiceProvider>,
                         missingGlossaryEntryRepository: MissingGlossaryEntryRepository,
                         exactHitsRepository: ExactHitsRepository,
-                        wildcardHitsRepository: WildcardHitsRepository) {
+                        wildcardHitsRepository: WildcardHitsRepository,
+                        private val coreAdapter: CoreAdapter) {
 
     companion object : KLogging()
 
     var databaseConnection: DatabaseConnection? = null
 
     val editorState: EditorState by lazy {
-        EditorState(runVerificationJobOnSegmentChange())
+        EditorState(runVerificationJobOnSegmentChange(), coreAdapter)
     }
 
     val sourceSearchJobBuilder: SourceSearchJobBuilder = SourceSearchJobBuilder(
             LuceneEnglishTokenizer(),
             verifierProviders)
 
-    val glossarySearchJobBuilder: GlossarySearchJobBuilder = GlossarySearchJobBuilder()
+    val glossarySearchJobBuilder: GlossarySearchJobBuilder = GlossarySearchJobBuilder(coreAdapter)
 
     val sourceSearchDispatcher = SourceSearchDispatcher(sourceSearchJobBuilder, exactHitsRepository,
             wildcardHitsRepository)
@@ -51,7 +52,7 @@ class BackgroundService(verifierProviders: List<VerifierServiceProvider>,
      */
     fun startBackgroundVerifierService() {
         startDatabase()
-        CoreAdapter.registerEntryEventListener(processedEntryChangedListener)
+        coreAdapter.registerEntryEventListener(processedEntryChangedListener)
     }
 
     private fun runVerificationJobOnSegmentChange(): (KProperty<*>, Segment, Segment) -> Unit {
@@ -67,7 +68,7 @@ class BackgroundService(verifierProviders: List<VerifierServiceProvider>,
     }
 
     private fun startDatabase() {
-        if (CoreAdapter.project.hasDatabaseFile) {
+        if (coreAdapter.project.hasDatabaseFile) {
             establishConnectionWithProjectDatabase()
         } else {
             establishConnectionWithProjectDatabase()
@@ -78,8 +79,7 @@ class BackgroundService(verifierProviders: List<VerifierServiceProvider>,
     }
 
     private fun establishConnectionWithProjectDatabase() {
-        databaseConnection = DatabaseConnection(DatabaseMode.ProductionDatabaseMode(
-                "jdbc:h2:${CoreAdapter.project.databaseName};DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false"))
+        databaseConnection = DatabaseConnection(DatabaseMode.ProductionDatabaseMode(coreAdapter.project.databaseName))
     }
 }
 

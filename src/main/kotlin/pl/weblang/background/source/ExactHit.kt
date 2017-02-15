@@ -4,7 +4,7 @@ import pl.weblang.integration.NamedProvider
 import pl.weblang.integration.file.isHit
 
 /**
- * Contains map of filenames and indexes of first occurrences.
+ * Contains map of filenames and indexes of first occurrences of a given fragment within a source file
  */
 class ExactHit(private val namedProvider: NamedProvider) {
 
@@ -14,12 +14,12 @@ class ExactHit(private val namedProvider: NamedProvider) {
 
     val providerName get() = namedProvider.name
     /**
-     * Is there at least one hit in any of the files.
+     * Is there at least one hit in any of the files
      */
     fun hasAnyHit() = fileWithIndex.any { it.value.isHit }
 
     /**
-     * Put entry
+     * Put new entry
      */
     fun put(fileName: String, indexOfWords: Int) {
         fileWithIndex.put(fileName, indexOfWords)

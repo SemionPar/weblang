@@ -1,13 +1,21 @@
 package pl.weblang.gui
 
 import org.omegat.gui.main.IMainWindow
+import pl.weblang.background.source.ExactHitVO
 import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
 import javax.swing.JMenu
 import javax.swing.JMenuItem
 import javax.swing.KeyStroke
 
-class Menu(val mainWindow: IMainWindow, private val adapter: ExactHitsViewModel) {
+/**
+ * Plugin menu
+ */
+class Menu(val mainWindow: IMainWindow, private val adapter: ViewModel<ExactHitVO>) {
+
+    /**
+     * Setup menu items
+     */
     fun initializeMenu() {
         val menu = JMenu("Weblang").apply {
             accessibleContext.accessibleDescription = "Weblang plugin main menu"
@@ -21,6 +29,6 @@ class Menu(val mainWindow: IMainWindow, private val adapter: ExactHitsViewModel)
         })
 
     }
-
 }
+
 

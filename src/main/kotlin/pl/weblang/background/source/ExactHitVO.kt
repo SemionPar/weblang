@@ -1,5 +1,8 @@
 package pl.weblang.background.source
 
+/**
+ * Value object that holds ExactHit data for persistence layer I/O
+ */
 data class ExactHitVO(
         val fragmentSize: Int,
         val fragmentPosition: Int,

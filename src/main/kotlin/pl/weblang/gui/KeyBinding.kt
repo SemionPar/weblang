@@ -6,15 +6,21 @@ import javax.swing.AbstractAction
 import javax.swing.ActionMap
 import javax.swing.InputMap
 
+/**
+ * Associates action to a shortcut
+ */
 class KeyBinding(inputMap: InputMap, actionMap: ActionMap, val keyAction: KeyAction) {
     companion object : KLogging()
 
     init {
-        inputMap.put(keyAction.keyStrokeAndIdPair.first, keyAction.keyStrokeAndIdPair.second)
-        actionMap.put(keyAction.keyStrokeAndIdPair.second, object : AbstractAction() {
+        val shortcut = keyAction.shortcut
+        val key = shortcut.key
+
+        inputMap.put(shortcut.keyStroke, key)
+        actionMap.put(key, object : AbstractAction() {
             override fun actionPerformed(e: ActionEvent) {
                 keyAction.action()
-                logger.info { "${keyAction.action} performed" }
+                logger.info { "$keyAction performed" }
             }
         })
     }

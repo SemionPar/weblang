@@ -1,6 +1,9 @@
 package pl.weblang.background
 
-class SubgroupTokenizer(val subgroupDelimiters: Array<String> = arrayOf("\"", "\'", ".", "(", ")", ";", ":")) {
+/**
+ * Separates segment to subgroups according to provided delimiters
+ */
+class SubgroupTokenizer(private val subgroupDelimiters: Array<String> = arrayOf("\"", "\'", ".", "(", ")", ";", ":")) {
 
     fun tokenizeToSubgroups(sentence: String,
                             vararg delimiters: String = subgroupDelimiters): List<String> {

@@ -1,4 +1,7 @@
 package pl.weblang.background.source
 
-data class SourceSearchJobResult(val results: MutableList<FragmentResult>,
+/**
+ * Value object to hold source search job results
+ */
+data class SourceSearchJobResult(val results: List<FragmentResult>,
                                  val timeStamp: Long)

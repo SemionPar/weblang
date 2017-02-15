@@ -10,8 +10,9 @@ import pl.weblang.integration.web.google.api.GoogleApiClient
 import pl.weblang.integration.web.google.api.GoogleApiService
 
 class IntegrationManager(val settings: IntegrationSettings) {
-    fun instantSearchIntegrations(): List<InstantIntegrationService> {
-        return if (settings.GOOGLE_API_ENABLED) listOf(GoogleApiService(GoogleApiClient())) else emptyList<InstantIntegrationService>()
+    fun instantSearchIntegrations(): List<InstantSearchService> {
+        return if (settings.GOOGLE_API_ENABLED) listOf(
+                GoogleApiService(GoogleApiClient())) else emptyList<InstantSearchService>()
     }
 
     fun verifierIntegrations(): List<VerifierServiceProvider> {
@@ -29,9 +30,8 @@ interface NamedProvider {
     val name: String
 }
 
-interface InstantIntegrationService {
+interface InstantSearchService {
     fun processInstantRequest(searchedPhrase: List<String>): InstantSearchResponse
-
 }
 
 class IntegrationSettings {

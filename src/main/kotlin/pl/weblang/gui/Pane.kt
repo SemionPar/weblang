@@ -26,6 +26,12 @@ class Pane(val mainWindow: IMainWindow) : JTextPane(), IPaneMenu {
     override fun populatePaneMenu(menu: JPopupMenu?) {
     }
 
+    private val desktop: Desktop?
+        get() {
+            val desktop = Desktop.getDesktop()
+            return desktop
+        }
+
     fun initializeGui() {
         isEditable = false
         isVisible = true
@@ -37,7 +43,11 @@ class Pane(val mainWindow: IMainWindow) : JTextPane(), IPaneMenu {
             run {
                 when {
                     HyperlinkEvent.EventType.ACTIVATED == event.eventType -> {
-                        Desktop.getDesktop().browse(event.url.toURI())
+                        try {
+                            desktop?.browse(event.url.toURI())
+                        } catch(exception: Exception) {
+                            logger.debug { "Error while opening link: ${exception.message}" }
+                        }
                     }
                     else -> {
                     }
@@ -57,12 +67,14 @@ class Pane(val mainWindow: IMainWindow) : JTextPane(), IPaneMenu {
     }
 
     fun displayInstantSearchResults(results: InstantSearchResults) {
-        val html = templater.process(results)
+        val html = templater.generateHtml(results)
         logger().debug { html }
         text = html
     }
 
 }
 
-data class KeyAction(val action: () -> Unit, val keyStrokeAndIdPair: Pair<KeyStroke, String>)
+data class KeyAction(val action: () -> Unit, val shortcut: Shortcut)
+
+data class Shortcut(val keyStroke: KeyStroke, val key: String)
 

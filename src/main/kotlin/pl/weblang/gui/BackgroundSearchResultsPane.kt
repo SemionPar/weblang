@@ -1,6 +1,7 @@
 package pl.weblang.gui
 
 import mu.KLogging
+import pl.weblang.background.source.ExactHitVO
 import java.awt.Dimension
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
@@ -8,7 +9,10 @@ import javax.swing.JFrame
 import javax.swing.JScrollPane
 import javax.swing.JTable
 
-class BackgroundSearchResultsPane(private val adapter: ExactHitsViewModel) : JFrame(), ActionListener {
+/**
+ * Pane displaying background search results
+ */
+class BackgroundSearchResultsPane(private val adapter: ViewModel<ExactHitVO>) : JFrame(), ActionListener {
     companion object : KLogging()
 
     override fun actionPerformed(e: ActionEvent?) {

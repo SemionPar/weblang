@@ -2,7 +2,7 @@ package pl.weblang.gui
 
 import javax.swing.table.AbstractTableModel
 
-class TableModel(private val adapter: ExactHitsViewModel) : AbstractTableModel() {
+class TableModel<T>(private val adapter: ViewModel<T>) : AbstractTableModel() {
     override fun getColumnCount() = adapter.getColumnCount()
 
     override fun getColumnName(column: Int) = adapter.getColumnName(column)

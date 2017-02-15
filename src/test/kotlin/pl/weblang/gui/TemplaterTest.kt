@@ -45,7 +45,7 @@ class TemplaterTest : Spek({
                                        }
 
                                        it("should map object without errors") {
-                                           print(templater.process(results))
+                                           print(templater.generateHtml(results))
                                        }
 
                                    }

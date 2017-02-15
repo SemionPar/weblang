@@ -12,7 +12,9 @@ import pl.weblang.persistence.WildcardHitsRepository
 class SourceSearchDispatcher(val jobBuilder: SourceSearchJobBuilder,
                              val exactHitsRepository: ExactHitsRepository,
                              val wildcardHitsRepository: WildcardHitsRepository) {
-
+    /**
+     * Start new source search for a segment
+     */
     fun start(segment: Segment) {
         val (fragmentResults, timeStamp) = runJob(segment)
 
@@ -36,8 +38,8 @@ class SourceSearchDispatcher(val jobBuilder: SourceSearchJobBuilder,
             for ((fileName, matches) in wildcardHit.entries) {
                 matches.forEach {
                     wildcardHitsRepository.create(WildcardHitVO(BackgroundServiceSettings.FRAGMENT_SIZE,
-                                                                it.positionInSource,
-                                                                it.wildcardPosition,
+                            it.matchIndexInSource,
+                            it.wildcardPositionInFragment,
                                                                 it.sourceSlice.joinToString(" ", "...", "..."),
                                                                 segment.fileName,
                                                                 wildcardHit.providerName,

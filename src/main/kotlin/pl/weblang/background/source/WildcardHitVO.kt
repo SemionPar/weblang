@@ -1,5 +1,8 @@
 package pl.weblang.background.source
 
+/**
+ * Value object that holds WildcardHit data for persistence layer I/O
+ */
 data class WildcardHitVO(
         val fragmentSize: Int,
         val fragmentPosition: Int,

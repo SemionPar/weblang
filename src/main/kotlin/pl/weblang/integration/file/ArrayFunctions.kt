@@ -1,6 +1,6 @@
 package pl.weblang.integration.file
 
-import pl.weblang.background.source.Match
+import pl.weblang.background.source.WildcardMatch
 
 /**
  * @return True if fragment was found in the collection
@@ -11,12 +11,12 @@ val Int.isHit: Boolean
 /**
  * Returns a list of single wildcard matches , e.g. (*, x, x)
  */
-fun <T> Array<T>.containsWithWildcards(wordSequence: List<T>): List<Match<T>> {
+fun <T> Array<T>.containsWithWildcards(wordSequence: List<T>): List<WildcardMatch<T>> {
 
     if (this.size < wordSequence.size) return emptyList()
     if (wordSequence.isEmpty() or this.isEmpty()) return emptyList()
 
-    val wildcards = ArrayList<Match<T>>()
+    val wildcards = ArrayList<WildcardMatch<T>>()
 
     for (position in (0..this.size - wordSequence.size)) {
         val sourceSlice = this.sliceArray(position..(position + (wordSequence.size - 1)))
@@ -26,7 +26,7 @@ fun <T> Array<T>.containsWithWildcards(wordSequence: List<T>): List<Match<T>> {
 
         if (notEqualPairsCount == 1) {
             val wildcardPosition = notEqualPairs.map { sourceAndSearchedPairs.indexOf(it) }.first()
-            wildcards.add(Match(position, wildcardPosition, sourceSlice))
+            wildcards.add(WildcardMatch(position, wildcardPosition, sourceSlice))
         }
     }
 

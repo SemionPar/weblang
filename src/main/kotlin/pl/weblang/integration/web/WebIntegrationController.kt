@@ -1,17 +1,22 @@
 package pl.weblang.integration.web
 
-import pl.weblang.integration.InstantIntegrationService
+import pl.weblang.integration.InstantSearchService
 import pl.weblang.integration.web.google.api.model.Item
 import pl.weblang.integration.web.google.api.model.SearchInformation
 import pl.weblang.integration.web.google.scraping.Entry
 
-class WebIntegrationController(val instantIntegrationServices: List<InstantIntegrationService>) {
+/**
+ * Holds all web integration services
+ */
+class WebIntegrationController(val instantSearchServices: List<InstantSearchService>) {
 
+    /**
+     * Run instant search with all available providers
+     */
     fun processInstantSearch(searchedPhrase: List<String>): List<WebInstantSearchResult> {
-        val webInstantSearchResults = instantIntegrationServices.map { it.processInstantRequest(searchedPhrase).toWebInstantSearchResult() }
-        return webInstantSearchResults
+        val instantSearchResults = instantSearchServices.map { it.processInstantRequest(searchedPhrase) }
+        return instantSearchResults.map { it.toWebInstantSearchResult() }
     }
-
 }
 
 sealed class InstantSearchResponse {
@@ -29,13 +34,17 @@ data class WebInstantSearchResult(val count: Long, val name: String, val entries
 
 private fun InstantSearchResponse.toWebInstantSearchResult(): WebInstantSearchResult {
     when (this) {
-        is InstantSearchResponse.GoogleApiInstantSearchResponse -> return WebInstantSearchResult(searchInformation.totalResults,
-                                                                                                 "Google API search results",
-                                                                                                 items.map(Item::toEntry))
+        is InstantSearchResponse.GoogleApiInstantSearchResponse -> return WebInstantSearchResult(
+                searchInformation.totalResults,
+                "Google API search results",
+                items.map(Item::toEntry))
         is InstantSearchResponse.ParsedGoogleResponseInstant -> return WebInstantSearchResult(count,
-                                                                                              "Google search results",
-                                                                                              entries)
+                "Google search results",
+                entries)
     }
 }
 
-private fun Item.toEntry(): Entry = Entry(link, htmlSnippet)
+private fun Item.toEntry(): Entry = Entry(link, htmlSnippet.replace("<b>", "<hit>")
+        .replace("</b>", "</hit>")
+        .replace("<br>", "")
+        .replace("&nbsp;", ""))
