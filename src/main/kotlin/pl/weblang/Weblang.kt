@@ -5,19 +5,18 @@ import org.omegat.core.events.IApplicationEventListener
 import org.omegat.core.events.IProjectEventListener
 import pl.weblang.background.BackgroundService
 import pl.weblang.background.source.ExactHitVO
-import pl.weblang.gui.*
-import pl.weblang.gui.pane.KeyAction
+import pl.weblang.gui.ExactHitsViewModel
+import pl.weblang.gui.Menu
+import pl.weblang.gui.SelectionAdapter
+import pl.weblang.gui.ViewModel
 import pl.weblang.gui.pane.InstantSearchPaneController
-import pl.weblang.gui.pane.Shortcut
-import pl.weblang.instant.InstantSearchController
+import pl.weblang.instant.InstantSearchService
 import pl.weblang.integration.IntegrationManager
 import pl.weblang.integration.IntegrationSettings
 import pl.weblang.integration.web.WebIntegrationController
 import pl.weblang.persistence.ExactHitsRepository
 import pl.weblang.persistence.MissingGlossaryEntryRepository
 import pl.weblang.persistence.WildcardHitsRepository
-import java.awt.event.KeyEvent
-import javax.swing.KeyStroke
 
 /**
  * Main plugin class
@@ -27,12 +26,12 @@ class Weblang {
     private val exactHitsRepository = ExactHitsRepository()
     private val suggestionsRepository = WildcardHitsRepository()
     private val missingGlossaryEntryRepository = MissingGlossaryEntryRepository()
-
     private val adapter: ViewModel<ExactHitVO> by lazy { ExactHitsViewModel(exactHitsRepository) }
-
-    private val instantSearchPaneController: InstantSearchPaneController by lazy { InstantSearchPaneController(CoreAdapter.mainWindow) }
+    private val instantSearchPaneController: InstantSearchPaneController by lazy {
+        InstantSearchPaneController(
+                CoreAdapter.mainWindow)
+    }
     private val menu: Menu by lazy { Menu(CoreAdapter.mainWindow, adapter, missingGlossaryEntryRepository) }
-
     private val integrationSettings = IntegrationSettings()
     private val integrationManager = IntegrationManager(integrationSettings)
     private val backgroundService: BackgroundService by lazy {
@@ -40,8 +39,9 @@ class Weblang {
                 missingGlossaryEntryRepository, exactHitsRepository, suggestionsRepository, CoreAdapter)
     }
     private val selectionHandler = SelectionAdapter(CoreAdapter)
-    private val instantSearchController: InstantSearchController by lazy {
-        InstantSearchController(WebIntegrationController(integrationManager.instantSearchIntegrations()))
+    private val instantSearchService: InstantSearchService by lazy {
+        InstantSearchService(WebIntegrationController(integrationManager.instantSearchIntegrations()),
+                selectionHandler, instantSearchPaneController)
     }
 
     /**
@@ -59,13 +59,13 @@ class Weblang {
             IProjectEventListener.PROJECT_CHANGE_TYPE.COMPILE -> {
             }
             IProjectEventListener.PROJECT_CHANGE_TYPE.CREATE -> {
-                setupPane()
                 setupMenu()
+                startInstantSearchService()
                 startBackgroundVerifierService()
             }
             IProjectEventListener.PROJECT_CHANGE_TYPE.LOAD -> {
-                setupPane()
                 setupMenu()
+                startInstantSearchService()
                 startBackgroundVerifierService()
             }
             IProjectEventListener.PROJECT_CHANGE_TYPE.SAVE -> {
@@ -79,8 +79,6 @@ class Weblang {
 
     private fun createIApplicationEventListener(): IApplicationEventListener = object : IApplicationEventListener {
         override fun onApplicationStartup() {
-            instantSearchPaneController.addDockable()
-            instantSearchPaneController.initializeGui()
         }
 
         override fun onApplicationShutdown() {
@@ -88,27 +86,16 @@ class Weblang {
     }
 
     private fun startBackgroundVerifierService() {
-        backgroundService.startBackgroundVerifierService()
+        backgroundService.start()
     }
 
-    private fun setupPane() {
-        instantSearchPaneController.assignKeyBinding(setupInstantSearchKeyAction())
+    private fun startInstantSearchService() {
+        instantSearchService.start()
     }
 
     private fun setupMenu() {
         menu.initializeMenu()
     }
 
-    private fun setupInstantSearchKeyAction(): KeyAction {
-        val CtrlG = KeyStroke.getKeyStroke(KeyEvent.VK_G, 1 shl 7, false)
-        val shortcutKey = "instantSearchKeyPressed"
-        val shortcut = Shortcut(CtrlG, shortcutKey)
-        return KeyAction({
-            selectionHandler.selection?.let {
-                instantSearchPaneController.clear()
-                instantSearchPaneController.displayInstantSearchResults(instantSearchController.search(it))
-            }
-        }, shortcut)
-    }
 }
 

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tmx SYSTEM "tmx14.dtd">
+<tmx version="1.4">
+  <header creationtool="OmegaT" o-tmf="OmegaT TMX" adminlang="EN-US" datatype="plaintext" creationtoolversion="4.1.1_0_bc09dd7" segtype="sentence" srclang="PL"/>
+  <body>
+<!-- Default translations -->
+    <tu>
+      <tuv xml:lang="PL">
+        <seg>Narty używane w tej dyscyplinie są krótsze od nart zjazdowych.</seg>
+      </tuv>
+      <tuv xml:lang="EN-GB" changeid="iliketodc" changedate="20170211T113746Z" creationid="iliketodc" creationdate="20170211T113746Z">
+        <seg>Narty used w tej dyscyplinie są krótsze od nart zjazdowych.</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="PL">
+        <seg>Oprócz szybkości przejazdu (tylko muldy) oceniane są także elementy akrobatyczne wykonywane podczas przejazdu, np. obroty - ten segment zawiera również słowo z glosariusza.</seg>
+      </tuv>
+      <tuv xml:lang="EN-GB" changeid="iliketodc" changedate="20170211T105840Z" creationid="iliketodc" creationdate="20170211T105840Z">
+        <seg>In addition to the speed of the rider we tend to assess the acrobatic figure.</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="PL">
+        <seg>Po tym zdecydowali, że wycieczka szkolna jednak się odbędzie.</seg>
+      </tuv>
+      <tuv xml:lang="EN-GB" changeid="iliketodc" changedate="20160621T204844Z" creationid="iliketodc" creationdate="20160621T204844Z">
+        <seg>After that they decided not to cancel school journey.</seg>
+      </tuv>
+    </tu>
+<!-- Alternative translations -->
+  </body>
+</tmx>

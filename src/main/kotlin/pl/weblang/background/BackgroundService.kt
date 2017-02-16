@@ -50,9 +50,10 @@ class BackgroundService(verifierProviders: List<VerifierServiceProvider>,
     /**
      * Start listening for events
      */
-    fun startBackgroundVerifierService() {
+    fun start() {
         startDatabase()
         coreAdapter.registerEntryEventListener(processedEntryChangedListener)
+        logger.info { "Started BackgroundService" }
     }
 
     private fun runVerificationJobOnSegmentChange(): (KProperty<*>, Segment, Segment) -> Unit {

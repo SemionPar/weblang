@@ -1,7 +1,6 @@
 package pl.weblang.gui
 
 import mu.KLogging
-import pl.weblang.gui.pane.KeyAction
 import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
 import javax.swing.ActionMap
