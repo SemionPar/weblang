@@ -1,6 +1,7 @@
 package pl.weblang.instant
 
-import kotlinx.coroutines.experimental.future.future
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.async
 import mu.KLogging
 import pl.weblang.gui.KeyAction
 import pl.weblang.gui.SelectionAdapter
@@ -23,15 +24,13 @@ class InstantSearchService(val webIntegrationController: WebIntegrationControlle
     fun search(selection: String) {
         val searchedPhrase = inputProcessor.toWords(selection)
 
-        val futureResults = future {
-            val response = webIntegrationController.processInstantSearch(searchedPhrase)
-            InstantSearchResults(response)
-        }
-
-        instantSearchPaneController.displayLoadingSpinner()
-
-        if (!futureResults.isCompletedExceptionally) {
-            instantSearchPaneController.displayInstantSearchResults(futureResults.join())
+        async(CommonPool) {
+            val futureResults = async(CommonPool) {
+                val response = webIntegrationController.processInstantSearch(searchedPhrase)
+                InstantSearchResults(response)
+            }
+            instantSearchPaneController.displayLoadingSpinner()
+            instantSearchPaneController.displayInstantSearchResults(futureResults.await())
         }
     }
 

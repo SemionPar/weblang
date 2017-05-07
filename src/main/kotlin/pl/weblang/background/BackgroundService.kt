@@ -1,7 +1,6 @@
 package pl.weblang.background
 
 import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.future.future
 import kotlinx.coroutines.experimental.launch
 import mu.KLogging
 import org.omegat.tokenizer.LuceneEnglishTokenizer
@@ -61,8 +60,10 @@ class BackgroundService(verifierProviders: List<VerifierServiceProvider>,
             property, old, new ->
             if (!new.hasInvalidState) {
                 launch(CommonPool) {
-                    future { sourceSearchDispatcher.start(new) }
-                    future { glossarySearchDispatcher.start(new) }
+                    glossarySearchDispatcher.start(new)
+                }
+                launch(CommonPool) {
+                    sourceSearchDispatcher.start(new)
                 }
             }
         }

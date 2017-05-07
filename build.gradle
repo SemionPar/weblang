@@ -1,8 +1,8 @@
 buildscript {
     ext {
         appName = 'weblang'
-        kotlinVersion = '1.1.0-beta-38'
-        kotlinCoroutinesVersion = '0.6-beta'
+        kotlinVersion = '1.1.2'
+        kotlinCoroutinesVersion = '0.12'
         spekVersion = '1.1.0-beta2'
         springBootVersion = '1.4.1.RELEASE'
         junitRunnerVersion = '1.0.0-M3'
@@ -95,7 +95,6 @@ test {
         destinationFile = file("$buildDir/reports/jacoco/jacocoTest.exec")
         classDumpFile = file("$buildDir/reports/jacoco/classpathdumps")
     }
-
 }
 
 jar {
@@ -115,7 +114,6 @@ dependencies {
     // Project
     compile "org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}"
     compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:${kotlinCoroutinesVersion}"
-    compile "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:${kotlinCoroutinesVersion}"
     compile "com.squareup.retrofit2:retrofit:2.1.0"
     compile "com.squareup.retrofit2:converter-gson:2.1.0"
     compile "org.jsoup:jsoup:1.10.1"
@@ -127,7 +125,6 @@ dependencies {
     compile "org.jetbrains.exposed:exposed:0.7.5"
     compile "com.h2database:h2:1.4.192"
     compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.8.6"
-    ktlint "com.github.shyiko:ktlint:0.4.0"
 
     // OmegaT 
     omegat("org.omegat:omegat:4.0.1")
@@ -160,28 +157,11 @@ repositories {
         url 'http://dl.bintray.com/omegat-org/maven'
     }
     maven {
-        url 'http://dl.bintray.com/kotlin/kotlin-eap-1.1'
-    }
-    maven {
         url "https://dl.bintray.com/jetbrains/spek"
     }
     maven {
         url "https://dl.bintray.com/kotlin/exposed"
     }
-}
-
-task ktlint(type: JavaExec) {
-    main = "com.github.shyiko.ktlint.Main"
-    classpath = configurations.ktlint
-    args "src/**/*.kt"
-}
-
-check.dependsOn ktlint
-
-task ktlintFormat(type: JavaExec) {
-    main = "com.github.shyiko.ktlint.Main"
-    classpath = configurations.ktlint
-    args "-F", "src/**/*.kt"
 }
 
 task runOmegatInstallDistTask(type: GradleBuild) {

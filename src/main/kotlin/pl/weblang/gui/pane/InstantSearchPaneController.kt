@@ -8,10 +8,11 @@ import pl.weblang.instant.InstantSearchResults
 
 val templater: Templater by lazy { Templater() }
 
-class InstantSearchPaneController(mainWindow: IMainWindow) {
+class InstantSearchPaneController(private val mainWindow: IMainWindow) {
+
     companion object : KLogging()
 
-    private val instantSearchPane = InstantSearchPane(mainWindow)
+    private val instantSearchPane = InstantSearchPane()
 
     fun assignKeyBinding(keyActions: Iterable<KeyAction>) {
         keyActions.forEach { instantSearchPane.addKeyBinding(it) }
@@ -20,16 +21,17 @@ class InstantSearchPaneController(mainWindow: IMainWindow) {
     fun displayInstantSearchResults(results: InstantSearchResults) {
         val html = templater.generateHtml(results)
         logger.debug { "Templater produced: $html" }
-        instantSearchPane.displayText(html)
+        instantSearchPane.displayHtml(html)
     }
 
     fun displayLoadingSpinner() {
         logger.debug { "Loading spinner..." }
-        instantSearchPane.displayLoadingSpinner()
+        instantSearchPane.showProgressAnimation()
     }
 
     fun initialize() {
-        instantSearchPane.addDockable()
+        mainWindow.addDockable(instantSearchPane.getOmegaTPane())
+        InstantSearchPane.logger.info { "Weblang pane added as dockable" }
     }
 }
 

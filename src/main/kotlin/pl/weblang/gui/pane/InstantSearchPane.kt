@@ -1,46 +1,34 @@
 package pl.weblang.gui.pane
 
+
+import com.vlsolutions.swing.docking.Dockable
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
 import mu.KLogging
 import org.omegat.gui.main.DockableScrollPane
-import org.omegat.gui.main.IMainWindow
 import org.omegat.util.gui.IPaneMenu
 import org.omegat.util.gui.StaticUIUtils
 import pl.weblang.gui.KeyAction
 import pl.weblang.gui.KeyBinding
-import java.awt.BorderLayout
 import java.awt.Desktop
 import java.awt.Dimension
 import javax.swing.*
 import javax.swing.event.HyperlinkEvent
 
+private val initialPaneSize = Dimension(300, 200)
 
-class InstantSearchPane(val mainWindow: IMainWindow) : IPaneMenu {
+class InstantSearchPane(
+        private var omegatPane: Dockable? = null,
+        private val textPane: JTextPane = JTextPane(),
+        private val title: String = "Weblang",
+        private val key: String = "WEBLANG") : IPaneMenu {
     companion object : KLogging()
 
-    private val textPane = JTextPane()
-    private val graphicPane = JPanel()
-    private val parentPane = JPanel()
-    private var dockableScrollPane: DockableScrollPane? = null
-
-    val title = "Weblang"
-    val key = "WEBLANG"
-
-    init {
-        setupGraphicPane()
-        setupTextPane()
-        parentPane.apply {
-            minimumSize = Dimension(300, 300)
-            add(textPane, BorderLayout.CENTER)
-            add(graphicPane, BorderLayout.CENTER)
-            isVisible = true
-        }
-    }
-
-    override fun populatePaneMenu(menu: JPopupMenu?) {
-        /*todo: handle regular sensible menu interactions*/
-    }
+    private val progressLayerUI: ProgressLayerUI
+    private val jLayer: JLayer<JTextPane>
+    val parentPane: JPanel
+    val displayedHtml: String? get() = textPane.text
+    val inProgress: Boolean get() = progressLayerUI.isVisible
 
     private val desktop: Desktop?
         get() {
@@ -48,55 +36,59 @@ class InstantSearchPane(val mainWindow: IMainWindow) : IPaneMenu {
             return desktop
         }
 
+    init {
+        setupTextPane()
+        progressLayerUI = ProgressLayerUI().apply { stop() }
+        jLayer = JLayer(textPane, progressLayerUI).apply {
+            setSize(initialPaneSize)
+        }
+        parentPane = JPanel().apply {
+            minimumSize = Dimension(initialPaneSize)
+            isVisible = true
+            add(jLayer)
+            size = initialPaneSize
+        }
+    }
+
+    override fun populatePaneMenu(menu: JPopupMenu?) {
+        /*todo: handle regular sensible menu interactions*/
+    }
+
     fun addKeyBinding(keyAction: KeyAction) {
         val inputMap = parentPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
         val actionMap = parentPane.actionMap
         KeyBinding(inputMap, actionMap, keyAction)
     }
 
-    fun clear() {
-        textPane.text = ""
-        graphicPane.isVisible = false
-    }
-
-    fun displayText(text: String) {
+    fun displayHtml(text: String) {
+        progressLayerUI.stop()
+        textPane.isVisible = true
         textPane.text = text
-        showTextPane()
     }
 
-    fun displayLoadingSpinner() {
-        showGraphicPane()
+    fun showProgressAnimation() {
+        textPane.isVisible = false
+        progressLayerUI.start()
     }
 
-    fun addDockable() {
-        if (dockableScrollPane == null) {
-            mainWindow.addDockable(DockableScrollPane(key, title, parentPane, true).apply {
-                dockableScrollPane = this
-            })
-        }
-        dockableScrollPane?.isVisible = true
-        logger.info { "Weblang pane added as dockable" }
-    }
-
-    private fun setupGraphicPane() {
-        graphicPane.apply {
-            val loadingSpinner = ImageIcon("img/ajax-loader.gif")
-            isVisible = false
-            minimumSize = Dimension(300, 300)
-            val label = JLabel("luluz", loadingSpinner, JLabel.CENTER)
-            add(label, BorderLayout.CENTER)
-            label.isVisible = true
-            label.minimumSize = Dimension(300, 300)
+    fun getOmegaTPane(): Dockable {
+        return omegatPane ?: run {
+            val dockableScrollPane = DockableScrollPane(key, title, parentPane, true)
+            omegatPane = dockableScrollPane
+            logger.info { "Dockable pane instantiated" }
+            dockableScrollPane
         }
     }
 
     private fun setupTextPane() {
         textPane.apply {
             isEditable = false
-            isVisible = false
+            isVisible = true
             StaticUIUtils.makeCaretAlwaysVisible(this)
-            minimumSize = Dimension(300, 300)
+            minimumSize = Dimension(initialPaneSize)
+            size = initialPaneSize
             contentType = "text/html"
+            text = "Use Ctrl+G to run a search on selected text"
             addHyperlinkListener { event ->
                 launch(CommonPool) {
                     when {
@@ -104,7 +96,7 @@ class InstantSearchPane(val mainWindow: IMainWindow) : IPaneMenu {
                             try {
                                 desktop?.browse(event.url.toURI())
                             } catch(exception: Exception) {
-                                logger.debug { "Error while opening link: ${exception.message}" }
+                                logger.error { "Error while opening link: ${exception.message}" }
                             }
                         }
                         else -> {
@@ -114,22 +106,5 @@ class InstantSearchPane(val mainWindow: IMainWindow) : IPaneMenu {
             }
         }
     }
-
-    private fun showTextPane() {
-        graphicPane.apply {
-            isVisible = false
-        }
-        textPane.apply {
-            isVisible = true
-        }
-    }
-
-    private fun showGraphicPane() {
-        textPane.apply {
-            isVisible = false
-        }
-        graphicPane.apply {
-            isVisible = true
-        }
-    }
 }
+
