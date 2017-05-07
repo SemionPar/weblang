@@ -8,5 +8,6 @@ data class InstantSearchResults(val responses: List<WebInstantSearchResult>) {
     /**
      * Used in the HTML template
      */
+    @Suppress("UNUSED_PROPERTY")
     val empty get() = count == 0L
 }

@@ -1,9 +1,9 @@
 package pl.weblang.integration.web.google.api
 
-import pl.weblang.integration.InstantSearchService
+import pl.weblang.instant.InstantSearchProvider
 import pl.weblang.integration.web.InstantSearchResponse
 
-class GoogleApiService(val client: GoogleApiClient) : InstantSearchService {
+class GoogleApiProvider(val client: GoogleApiClient) : InstantSearchProvider {
 
     override fun processInstantRequest(searchedPhrase: List<String>): InstantSearchResponse {
         return client.search(GoogleApiRequest(searchedPhrase))

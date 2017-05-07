@@ -3,16 +3,16 @@ package pl.weblang.integration
 import pl.weblang.background.Fragment
 import pl.weblang.background.source.ExactHit
 import pl.weblang.background.source.WildcardHit
+import pl.weblang.instant.InstantSearchProvider
 import pl.weblang.integration.file.FileManager
 import pl.weblang.integration.file.FileServiceProvider
-import pl.weblang.integration.web.InstantSearchResponse
 import pl.weblang.integration.web.google.api.GoogleApiClient
-import pl.weblang.integration.web.google.api.GoogleApiService
+import pl.weblang.integration.web.google.api.GoogleApiProvider
 
 class IntegrationManager(val settings: IntegrationSettings) {
-    fun instantSearchIntegrations(): List<InstantSearchService> {
+    fun instantSearchIntegrations(): List<InstantSearchProvider> {
         return if (settings.GOOGLE_API_ENABLED) listOf(
-                GoogleApiService(GoogleApiClient())) else emptyList<InstantSearchService>()
+                GoogleApiProvider(GoogleApiClient())) else emptyList<InstantSearchProvider>()
     }
 
     fun verifierIntegrations(): List<VerifierServiceProvider> {
@@ -28,10 +28,6 @@ interface VerifierServiceProvider : NamedProvider {
 
 interface NamedProvider {
     val name: String
-}
-
-interface InstantSearchService {
-    fun processInstantRequest(searchedPhrase: List<String>): InstantSearchResponse
 }
 
 class IntegrationSettings {

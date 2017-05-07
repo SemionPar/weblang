@@ -1,6 +1,6 @@
 package pl.weblang.integration.web
 
-import pl.weblang.integration.InstantSearchService
+import pl.weblang.instant.InstantSearchProvider
 import pl.weblang.integration.web.google.api.model.Item
 import pl.weblang.integration.web.google.api.model.SearchInformation
 import pl.weblang.integration.web.google.scraping.Entry
@@ -8,13 +8,13 @@ import pl.weblang.integration.web.google.scraping.Entry
 /**
  * Holds all web integration services
  */
-class WebIntegrationController(val instantSearchServices: List<InstantSearchService>) {
+class WebIntegrationController(val instantSearchProviders: List<InstantSearchProvider>) {
 
     /**
      * Run instant search with all available providers
      */
     fun processInstantSearch(searchedPhrase: List<String>): List<WebInstantSearchResult> {
-        val instantSearchResults = instantSearchServices.map { it.processInstantRequest(searchedPhrase) }
+        val instantSearchResults = instantSearchProviders.map { it.processInstantRequest(searchedPhrase) }
         return instantSearchResults.map { it.toWebInstantSearchResult() }
     }
 }
