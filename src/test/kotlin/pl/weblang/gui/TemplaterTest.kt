@@ -8,7 +8,7 @@ import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 import pl.weblang.instant.InstantSearchResults
 import pl.weblang.integration.web.WebInstantSearchResult
-import pl.weblang.integration.web.google.scraping.Entry
+import pl.weblang.integration.web.google.Entry
 
 class TemplaterTest : Spek({
                                describe("templater should provide correct html for web instant search results") {

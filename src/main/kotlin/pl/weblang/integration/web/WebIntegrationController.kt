@@ -1,9 +1,9 @@
 package pl.weblang.integration.web
 
 import pl.weblang.instant.InstantSearchProvider
+import pl.weblang.integration.web.google.Entry
 import pl.weblang.integration.web.google.api.model.Item
 import pl.weblang.integration.web.google.api.model.SearchInformation
-import pl.weblang.integration.web.google.scraping.Entry
 
 /**
  * Holds all web integration services
@@ -44,7 +44,8 @@ private fun InstantSearchResponse.toWebInstantSearchResult(): WebInstantSearchRe
     }
 }
 
-private fun Item.toEntry(): Entry = Entry(link, htmlSnippet.replace("<b>", "<hit>")
+private fun Item.toEntry(): Entry = Entry(
+        link, htmlSnippet.replace("<b>", "<hit>")
         .replace("</b>", "</hit>")
         .replace("<br>", "")
         .replace("&nbsp;", ""))
