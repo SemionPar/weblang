@@ -3,8 +3,8 @@ package pl.weblang.gui.paneg
 import com.vlsolutions.swing.docking.DockKey
 import com.vlsolutions.swing.docking.Dockable
 import org.amshove.kluent.`should be`
-import org.apache.commons.lang3.StringUtils
 import org.junit.Test
+import pl.weblang.`should be ignoring whitespace`
 import pl.weblang.gui.pane.InstantSearchPane
 import java.awt.Component
 import java.awt.Dimension
@@ -77,14 +77,6 @@ class InstantSearchPaneTest {
     }
 
 }
-
-private infix fun String?.`should be ignoring whitespace`(other: String) {
-    if (this == null) throw AssertionError("Was null, expected $other")
-    if (this.removeWhitespaceCharacters() != other.removeWhitespaceCharacters()) throw AssertionError(
-            "Was $this, expected $other")
-}
-
-private fun String.removeWhitespaceCharacters(): String = StringUtils.deleteWhitespace(this)
 
 private class TestOmegatPane : JScrollPane(), Dockable {
     override fun getComponent(): Component {

@@ -1,8 +1,5 @@
 package pl.weblang.integration
 
-import pl.weblang.background.Fragment
-import pl.weblang.background.source.ExactHit
-import pl.weblang.background.source.WildcardHit
 import pl.weblang.instant.InstantSearchProvider
 import pl.weblang.integration.file.FileManager
 import pl.weblang.integration.file.FileServiceProvider
@@ -20,20 +17,3 @@ class IntegrationManager(val settings: IntegrationSettings) {
         return listOf(FileServiceProvider(FileManager(), "File service"))
     }
 }
-
-interface VerifierServiceProvider : NamedProvider {
-    fun findExactHits(fragment: Fragment): ExactHit
-    fun findWildcardHits(fragment: Fragment): WildcardHit
-}
-
-interface NamedProvider {
-    val name: String
-}
-
-class IntegrationSettings {
-
-    var GOOGLE_API_ENABLED: Boolean = true
-    var VERIFIER_ENABLED: Boolean = true
-
-}
-

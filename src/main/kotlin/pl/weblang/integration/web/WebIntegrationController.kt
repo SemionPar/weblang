@@ -20,12 +20,6 @@ class WebIntegrationController(val instantSearchProviders: List<InstantSearchPro
 }
 
 sealed class InstantSearchResponse {
-    data class ParsedGoogleResponseInstant(val count: Long, val entries: List<Entry>) : InstantSearchResponse() {
-        companion object {
-            fun emptyInstance() = ParsedGoogleResponseInstant(0, emptyList())
-        }
-    }
-
     data class GoogleApiInstantSearchResponse(val searchInformation: SearchInformation,
                                               val items: List<Item>) : InstantSearchResponse()
 }
@@ -38,14 +32,7 @@ private fun InstantSearchResponse.toWebInstantSearchResult(): WebInstantSearchRe
                 searchInformation.totalResults,
                 "Google API search results",
                 items.map(Item::toEntry))
-        is InstantSearchResponse.ParsedGoogleResponseInstant -> return WebInstantSearchResult(count,
-                "Google search results",
-                entries)
     }
 }
 
-private fun Item.toEntry(): Entry = Entry(
-        link, htmlSnippet.replace("<b>", "<hit>")
-        .replace("</b>", "</hit>")
-        .replace("<br>", "")
-        .replace("&nbsp;", ""))
+private fun Item.toEntry(): Entry = Entry(link, htmlSnippet)
