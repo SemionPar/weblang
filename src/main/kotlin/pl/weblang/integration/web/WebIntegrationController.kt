@@ -1,5 +1,6 @@
 package pl.weblang.integration.web
 
+import org.apache.http.client.utils.URIBuilder
 import pl.weblang.instant.InstantSearchProvider
 import pl.weblang.instant.view.template.Entry
 import pl.weblang.integration.web.google.api.model.Item
@@ -35,4 +36,4 @@ private fun InstantSearchResponse.toWebInstantSearchResult(): WebInstantSearchRe
     }
 }
 
-private fun Item.toEntry(): Entry = Entry(link, htmlSnippet)
+private fun Item.toEntry(): Entry = Entry(URIBuilder(link).build(), htmlSnippet)

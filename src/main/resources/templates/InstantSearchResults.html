@@ -19,7 +19,7 @@
             <td>
                 <div>
                     <p th:utext="${entry.text}">Text</p>
-                    <a th:href="${entry.link}" th:text="${entry.link}">link</a>
+                    <a th:href="${entry.uri}" th:text="${entry.uri.host}">link</a>
                 </div>
             </td>
         </tr>
