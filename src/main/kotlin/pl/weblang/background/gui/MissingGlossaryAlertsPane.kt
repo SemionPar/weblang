@@ -1,4 +1,4 @@
-package pl.weblang.gui
+package pl.weblang.background.gui
 
 import com.google.common.collect.Lists
 import mu.KLogging

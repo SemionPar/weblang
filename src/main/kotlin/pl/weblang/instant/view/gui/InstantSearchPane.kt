@@ -1,4 +1,4 @@
-package pl.weblang.gui.pane
+package pl.weblang.instant.view.gui
 
 
 import com.vlsolutions.swing.docking.Dockable
@@ -8,8 +8,8 @@ import mu.KLogging
 import org.omegat.gui.main.DockableScrollPane
 import org.omegat.util.gui.IPaneMenu
 import org.omegat.util.gui.StaticUIUtils
-import pl.weblang.gui.KeyAction
-import pl.weblang.gui.KeyBinding
+import pl.weblang.shortcut.KeyAction
+import pl.weblang.shortcut.KeyBinding
 import java.awt.Desktop
 import java.awt.Dimension
 import javax.swing.*

@@ -1,4 +1,4 @@
-package pl.weblang.gui
+package pl.weblang.background.gui
 
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
@@ -8,8 +8,9 @@ import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.api.dsl.on
 import pl.weblang.`should be ignoring whitespace`
 import pl.weblang.instant.InstantSearchResults
+import pl.weblang.instant.view.template.Entry
+import pl.weblang.instant.view.template.Templater
 import pl.weblang.integration.web.WebInstantSearchResult
-import pl.weblang.integration.web.google.Entry
 
 class TemplaterTest : Spek({
     describe("templater should provide correct html for web instant search results") {

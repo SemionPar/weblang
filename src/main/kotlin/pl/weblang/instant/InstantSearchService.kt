@@ -3,11 +3,11 @@ package pl.weblang.instant
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.async
 import mu.KLogging
-import pl.weblang.gui.KeyAction
-import pl.weblang.gui.SelectionAdapter
-import pl.weblang.gui.Shortcut
-import pl.weblang.gui.pane.InstantSearchPaneController
+import pl.weblang.SelectionAdapter
+import pl.weblang.instant.view.gui.InstantSearchPaneController
 import pl.weblang.integration.web.WebIntegrationController
+import pl.weblang.shortcut.KeyAction
+import pl.weblang.shortcut.Shortcut
 import java.awt.event.KeyEvent
 import javax.swing.KeyStroke
 

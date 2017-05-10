@@ -1,4 +1,4 @@
-package pl.weblang.gui
+package pl.weblang.background.gui
 
 import mu.KLogging
 import pl.weblang.background.source.ExactHitVO

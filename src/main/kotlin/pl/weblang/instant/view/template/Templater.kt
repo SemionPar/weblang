@@ -1,4 +1,4 @@
-package pl.weblang.gui
+package pl.weblang.instant.view.template
 
 import org.thymeleaf.TemplateEngine
 import org.thymeleaf.context.Context

@@ -1,4 +1,4 @@
-package pl.weblang.gui.pane
+package pl.weblang.instant.view.gui
 
 import java.awt.*
 import java.awt.event.ActionEvent

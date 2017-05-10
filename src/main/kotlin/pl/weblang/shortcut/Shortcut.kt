@@ -1,4 +1,4 @@
-package pl.weblang.gui
+package pl.weblang.shortcut
 
 import javax.swing.KeyStroke
 

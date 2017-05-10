@@ -1,7 +1,11 @@
-package pl.weblang.gui
+package pl.weblang
 
 import org.omegat.gui.main.IMainWindow
 import pl.weblang.background.forgetful.MissingGlossaryEntry
+import pl.weblang.background.gui.BackgroundSearchResultsPane
+import pl.weblang.background.gui.MissingGlossaryAlertsPane
+import pl.weblang.background.gui.ViewModel
+import pl.weblang.background.gui.WildcardHitsViewModel
 import pl.weblang.background.source.ExactHitVO
 import pl.weblang.persistence.MissingGlossaryEntryRepository
 import java.awt.event.ActionEvent

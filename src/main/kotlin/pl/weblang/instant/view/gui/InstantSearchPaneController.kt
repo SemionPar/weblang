@@ -1,10 +1,10 @@
-package pl.weblang.gui.pane
+package pl.weblang.instant.view.gui
 
 import mu.KLogging
 import org.omegat.gui.main.IMainWindow
-import pl.weblang.gui.KeyAction
-import pl.weblang.gui.Templater
 import pl.weblang.instant.InstantSearchResults
+import pl.weblang.instant.view.template.Templater
+import pl.weblang.shortcut.KeyAction
 
 val templater: Templater by lazy { Templater() }
 

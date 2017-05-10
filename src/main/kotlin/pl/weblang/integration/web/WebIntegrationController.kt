@@ -1,7 +1,7 @@
 package pl.weblang.integration.web
 
 import pl.weblang.instant.InstantSearchProvider
-import pl.weblang.integration.web.google.Entry
+import pl.weblang.instant.view.template.Entry
 import pl.weblang.integration.web.google.api.model.Item
 import pl.weblang.integration.web.google.api.model.SearchInformation
 

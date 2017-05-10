@@ -1,3 +1,3 @@
-package pl.weblang.gui
+package pl.weblang.shortcut
 
 data class KeyAction(val action: () -> Unit, val shortcut: Shortcut)

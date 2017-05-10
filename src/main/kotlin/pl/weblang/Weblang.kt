@@ -4,13 +4,11 @@ import org.omegat.core.CoreEvents
 import org.omegat.core.events.IApplicationEventListener
 import org.omegat.core.events.IProjectEventListener
 import pl.weblang.background.BackgroundService
+import pl.weblang.background.gui.ExactHitsViewModel
+import pl.weblang.background.gui.ViewModel
 import pl.weblang.background.source.ExactHitVO
-import pl.weblang.gui.ExactHitsViewModel
-import pl.weblang.gui.Menu
-import pl.weblang.gui.SelectionAdapter
-import pl.weblang.gui.ViewModel
-import pl.weblang.gui.pane.InstantSearchPaneController
 import pl.weblang.instant.InstantSearchService
+import pl.weblang.instant.view.gui.InstantSearchPaneController
 import pl.weblang.integration.IntegrationManager
 import pl.weblang.integration.IntegrationSettings
 import pl.weblang.integration.web.WebIntegrationController

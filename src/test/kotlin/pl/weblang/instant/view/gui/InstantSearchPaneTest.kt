@@ -1,11 +1,11 @@
-package pl.weblang.gui.paneg
+package pl.weblang.background.gui.paneg
 
 import com.vlsolutions.swing.docking.DockKey
 import com.vlsolutions.swing.docking.Dockable
 import org.amshove.kluent.`should be`
 import org.junit.Test
 import pl.weblang.`should be ignoring whitespace`
-import pl.weblang.gui.pane.InstantSearchPane
+import pl.weblang.instant.view.gui.InstantSearchPane
 import java.awt.Component
 import java.awt.Dimension
 import javax.swing.JFrame
