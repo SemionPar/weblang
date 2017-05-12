@@ -69,7 +69,7 @@ class InstantSearchPaneTest {
         JFrame("TestFrame").apply {
             contentPane = instantSearchPane.parentPane
             defaultCloseOperation = JFrame.EXIT_ON_CLOSE
-            minimumSize = Dimension(300, 200)
+            minimumSize = Dimension(600, 600)
             isVisible = true
             pack()
         }

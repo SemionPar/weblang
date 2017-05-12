@@ -10,6 +10,7 @@ import org.omegat.util.gui.IPaneMenu
 import org.omegat.util.gui.StaticUIUtils
 import pl.weblang.shortcut.KeyAction
 import pl.weblang.shortcut.KeyBinding
+import java.awt.BorderLayout
 import java.awt.Desktop
 import java.awt.Dimension
 import javax.swing.*
@@ -40,14 +41,13 @@ class InstantSearchPane(
         setupTextPane()
         progressLayerUI = ProgressLayerUI().apply { stop() }
         jLayer = JLayer(textPane, progressLayerUI).apply {
-            setSize(initialPaneSize)
-        }
-        parentPane = JPanel().apply {
-            minimumSize = Dimension(initialPaneSize)
-            isVisible = true
-            add(jLayer)
             size = initialPaneSize
         }
+        parentPane = JPanel().apply {
+            minimumSize = initialPaneSize
+            isVisible = true
+        }
+        parentPane.add(jLayer, BorderLayout.CENTER)
     }
 
     override fun populatePaneMenu(menu: JPopupMenu?) {
@@ -85,10 +85,13 @@ class InstantSearchPane(
             isEditable = false
             isVisible = true
             StaticUIUtils.makeCaretAlwaysVisible(this)
-            minimumSize = Dimension(initialPaneSize)
+
+            minimumSize = initialPaneSize
             size = initialPaneSize
+
             contentType = "text/html"
             text = "Use Ctrl+G to run a search on selected text"
+
             addHyperlinkListener { event ->
                 launch(CommonPool) {
                     when {
