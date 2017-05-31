@@ -11,3 +11,10 @@ data class InstantSearchResults(val responses: List<WebInstantSearchResult>) {
     @Suppress("UNUSED_PROPERTY")
     val empty get() = count == 0L
 }
+
+private inline fun <T> Iterable<T>.sumByLong(selector: (T) -> Long): Long {
+    val sum: Long = this
+            .map { selector(it) }
+            .sum()
+    return sum
+}

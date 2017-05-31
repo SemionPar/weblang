@@ -14,7 +14,7 @@ class WebIntegrationController(val instantSearchProviders: List<InstantSearchPro
     /**
      * Run instant search with all available providers
      */
-    fun processInstantSearch(searchedPhrase: List<String>): List<WebInstantSearchResult> {
+    fun processInstantSearch(searchedPhrase: String): List<WebInstantSearchResult> {
         val instantSearchResults = instantSearchProviders.map { it.processInstantRequest(searchedPhrase) }
         return instantSearchResults.map { it.toWebInstantSearchResult() }
     }
@@ -22,7 +22,7 @@ class WebIntegrationController(val instantSearchProviders: List<InstantSearchPro
 
 sealed class InstantSearchResponse {
     data class GoogleApiInstantSearchResponse(val searchInformation: SearchInformation,
-                                              val items: List<Item>) : InstantSearchResponse()
+                                              val items: List<Item>?) : InstantSearchResponse()
 }
 
 data class WebInstantSearchResult(val count: Long, val name: String, val entries: List<Entry>)
@@ -32,7 +32,7 @@ private fun InstantSearchResponse.toWebInstantSearchResult(): WebInstantSearchRe
         is InstantSearchResponse.GoogleApiInstantSearchResponse -> return WebInstantSearchResult(
                 searchInformation.totalResults,
                 "Google API search results",
-                items.map(Item::toEntry))
+                items?.map(Item::toEntry) ?: emptyList())
     }
 }
 

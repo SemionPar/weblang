@@ -1,7 +1,7 @@
 package pl.weblang.integration.web.google
 
-fun toExactMatch(query: List<String>) = query.convertToGoogleExactMatchQueryString()
+fun toExactMatch(query: String) = query.convertToGoogleExactMatchQueryString()
 
-fun List<String>.convertToGoogleExactMatchQueryString(): String {
-    return "\"".plus(this.reduce { s1, s2 -> s1 + "+" + s2 }).plus("\"")
+fun String.convertToGoogleExactMatchQueryString(): String {
+    return "\"".plus(this.replace(" ", "+")).plus("\"")
 }

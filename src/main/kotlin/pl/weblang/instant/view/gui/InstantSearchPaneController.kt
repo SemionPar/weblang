@@ -33,5 +33,9 @@ class InstantSearchPaneController(private val mainWindow: IMainWindow) {
         mainWindow.addDockable(instantSearchPane.getOmegaTPane())
         InstantSearchPane.logger.info { "Weblang pane added as dockable" }
     }
+
+    fun displayError() {
+        instantSearchPane.displayHtml("Oops! An error occurred.")
+    }
 }
 

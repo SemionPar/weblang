@@ -7,7 +7,7 @@ import pl.weblang.integration.web.google.convertToGoogleExactMatchQueryString
 /**
  * Google API request object with default values
  */
-class GoogleApiRequest(val searchedPhrase: List<String>,
+class GoogleApiRequest(val searchedPhrase: String,
                        val language: String = "lang_en",
                        val region: String = "countryUS",
                        val pageSize: Int = 10,
@@ -18,13 +18,13 @@ class GoogleApiRequest(val searchedPhrase: List<String>,
         get() {
             val exactMatch = toExactMatch(searchedPhrase)
             return mapOf(Pair("q", exactMatch),
-                    Pair("lr", language),
-                    Pair("cr", region),
-                    Pair("num", pageSize),
-                    Pair("cx", customSearchEngineId),
-                    Pair("key", apiKey))
+                         Pair("lr", language),
+                         Pair("cr", region),
+                         Pair("num", pageSize),
+                         Pair("cx", customSearchEngineId),
+                         Pair("key", apiKey))
         }
 
-    private fun toExactMatch(query: List<String>) = query.convertToGoogleExactMatchQueryString()
+    private fun toExactMatch(query: String) = query.convertToGoogleExactMatchQueryString()
 
 }

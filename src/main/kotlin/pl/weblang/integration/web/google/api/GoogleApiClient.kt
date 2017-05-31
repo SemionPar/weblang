@@ -1,6 +1,7 @@
 package pl.weblang.integration.web.google.api
 
 import com.google.gson.Gson
+import com.mashape.unirest.http.HttpResponse
 import com.mashape.unirest.http.ObjectMapper
 import com.mashape.unirest.http.Unirest
 import mu.KLogging
@@ -57,9 +58,23 @@ class GoogleApiClient {
                     "Response null, url: ${httpRequest.url}, query: ${httpRequest.queryOptions}")
         }
 
-        logger.debug { "Google API call. Request: $request, Response: $response" }
+        logger.info { "Google API call.\n [Request]:\n ${request.log()},\n [Response]:\n ${response.log()}" }
 
         return response.body
     }
+}
+
+private fun <T> HttpResponse<T>.log(): String {
+    return """Status: ${this.status}
+              Headers: ${this.headers}
+              Body: ${this.body}
+           """.trimIndent()
+}
+
+private fun com.mashape.unirest.request.HttpRequest.log(): String {
+    return """Method: ${this.httpMethod}
+              Url: ${this.url}
+              Headers: ${this.headers}
+           """.trimIndent()
 }
 

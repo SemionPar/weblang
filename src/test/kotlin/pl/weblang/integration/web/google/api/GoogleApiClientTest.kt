@@ -27,7 +27,7 @@ class GoogleApiClientTest {
         val searchItem = "pets"
 
         // when
-        client.search(GoogleApiRequest(listOf(searchItem), url = url))
+        client.search(GoogleApiRequest(searchItem, url = url))
 
         // then
         WireMock.verify(WireMock.getRequestedFor(WireMock.urlMatching("/url.*"))
@@ -51,7 +51,7 @@ class GoogleApiClientTest {
         val searchItem = "pets"
 
         // when
-        client.search(GoogleApiRequest(listOf(searchItem), url = url))
+        client.search(GoogleApiRequest(searchItem, url = url))
 
         // then
         WireMock.verify(WireMock.getRequestedFor(WireMock.urlMatching("/url.*"))

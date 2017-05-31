@@ -19,18 +19,22 @@ class InstantSearchService(val webIntegrationController: WebIntegrationControlle
                            val instantSearchPaneController: InstantSearchPaneController) {
     companion object : KLogging()
 
-    private val inputProcessor: InputProcessor = InputProcessor()
+    private val inputValidator: InputValidator = InputValidator()
 
     fun search(selection: String) {
-        val searchedPhrase = inputProcessor.toWords(selection)
-
-        async(CommonPool) {
-            val futureResults = async(CommonPool) {
-                val response = webIntegrationController.processInstantSearch(searchedPhrase)
-                InstantSearchResults(response)
+        try {
+            val searchedPhrase = selection.validate().trim()
+            async(CommonPool) {
+                val futureResults = async(CommonPool) {
+                    val response = webIntegrationController.processInstantSearch(searchedPhrase)
+                    InstantSearchResults(response)
+                }
+                instantSearchPaneController.displayLoadingSpinner()
+                instantSearchPaneController.displayInstantSearchResults(futureResults.await())
             }
-            instantSearchPaneController.displayLoadingSpinner()
-            instantSearchPaneController.displayInstantSearchResults(futureResults.await())
+        } catch(e: IllegalArgumentException) {
+            logger.debug { e }
+            instantSearchPaneController.displayError()
         }
     }
 
@@ -41,26 +45,15 @@ class InstantSearchService(val webIntegrationController: WebIntegrationControlle
     }
 
     private fun setupInstantSearchKeyAction(): KeyAction {
-        val CtrlG = KeyStroke.getKeyStroke(KeyEvent.VK_G, 1 shl 7, false)
+        val ctrlG = KeyStroke.getKeyStroke(KeyEvent.VK_G, 1 shl 7, false)
         val shortcutKey = "instantSearchKeyPressed"
-        val shortcut = Shortcut(CtrlG, shortcutKey)
+        val shortcut = Shortcut(ctrlG, shortcutKey)
         return KeyAction({
-            selectionHandler.selection?.let {
-                this@InstantSearchService.search(it)
-            }
-        }, shortcut)
+                             selectionHandler.selection?.let {
+                                 this@InstantSearchService.search(it)
+                             }
+                         }, shortcut)
     }
-}
 
-class InputProcessor {
-    fun toWords(input: String): List<String> {
-        return input.split(" ")
-    }
-}
-
-inline fun <T> Iterable<T>.sumByLong(selector: (T) -> Long): Long {
-    val sum: Long = this
-            .map { selector(it) }
-            .sum()
-    return sum
+    private fun String.validate() = this.also { inputValidator.validate(this) }
 }
