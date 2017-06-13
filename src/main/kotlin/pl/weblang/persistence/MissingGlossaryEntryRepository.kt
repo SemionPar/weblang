@@ -6,7 +6,7 @@ import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
-import pl.weblang.background.forgetful.MissingGlossaryEntry
+import pl.weblang.domain.background.forgetful.MissingGlossaryEntry
 
 /**
  * Repository for missing glossary terms
@@ -42,7 +42,7 @@ class MissingGlossaryEntryRepository : Repository<MissingGlossaryEntry> {
 
     private fun fromRow(row: ResultRow): MissingGlossaryEntry =
             MissingGlossaryEntry(row[MissingGlossaryEntriesTable.file],
-                    row[MissingGlossaryEntriesTable.segmentNumber],
-                    row[MissingGlossaryEntriesTable.timestamp])
+                                 row[MissingGlossaryEntriesTable.segmentNumber],
+                                 row[MissingGlossaryEntriesTable.timestamp])
 
 }

@@ -1,6 +1,6 @@
 package pl.weblang.integration.file
 
-import pl.weblang.background.source.WildcardMatch
+import pl.weblang.domain.background.source.WildcardMatch
 
 /**
  * @return True if fragment was found in the collection

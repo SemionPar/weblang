@@ -1,11 +1,11 @@
 package pl.weblang.integration.file
 
-import pl.weblang.background.Fragment
-import pl.weblang.background.source.ExactHit
-import pl.weblang.background.source.WildcardHit
-import pl.weblang.integration.VerifierServiceProvider
+import pl.weblang.domain.background.Fragment
+import pl.weblang.domain.background.port.SearchServiceProvider
+import pl.weblang.domain.background.source.ExactHit
+import pl.weblang.domain.background.source.WildcardHit
 
-class FileServiceProvider(fileManager: FileManager, override val name: String) : VerifierServiceProvider {
+class FileServiceProvider(fileManager: FileManager, override val name: String) : SearchServiceProvider {
 
     private val files: List<ResourceFile> = fileManager.resourceFiles
 

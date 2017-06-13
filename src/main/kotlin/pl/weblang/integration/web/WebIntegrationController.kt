@@ -1,8 +1,8 @@
 package pl.weblang.integration.web
 
 import org.apache.http.client.utils.URIBuilder
-import pl.weblang.instant.InstantSearchProvider
-import pl.weblang.instant.view.template.Entry
+import pl.weblang.domain.instant.InstantSearchProvider
+import pl.weblang.domain.instant.view.template.Entry
 import pl.weblang.integration.web.google.api.model.Item
 import pl.weblang.integration.web.google.api.model.SearchInformation
 

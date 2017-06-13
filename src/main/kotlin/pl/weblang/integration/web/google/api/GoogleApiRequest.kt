@@ -1,6 +1,6 @@
 package pl.weblang.integration.web.google.api
 
-import pl.weblang.GoogleSettings
+import pl.weblang.configuration.GoogleSettings
 import pl.weblang.integration.web.HttpRequest
 import pl.weblang.integration.web.google.convertToGoogleExactMatchQueryString
 

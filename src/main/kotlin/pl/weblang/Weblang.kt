@@ -3,15 +3,18 @@ package pl.weblang
 import org.omegat.core.CoreEvents
 import org.omegat.core.events.IApplicationEventListener
 import org.omegat.core.events.IProjectEventListener
-import pl.weblang.background.BackgroundService
-import pl.weblang.background.gui.ExactHitsViewModel
-import pl.weblang.background.gui.ViewModel
-import pl.weblang.background.source.ExactHitVO
-import pl.weblang.instant.InstantSearchService
-import pl.weblang.instant.view.gui.InstantSearchPaneController
+import pl.weblang.domain.background.BackgroundService
+import pl.weblang.domain.background.gui.ExactHitsViewModel
+import pl.weblang.domain.background.gui.ViewModel
+import pl.weblang.domain.background.source.ExactHitVO
+import pl.weblang.domain.instant.InstantSearchService
+import pl.weblang.domain.instant.view.gui.InstantSearchPaneController
 import pl.weblang.integration.IntegrationManager
 import pl.weblang.integration.IntegrationSettings
 import pl.weblang.integration.web.WebIntegrationController
+import pl.weblang.omegat.CoreAdapter
+import pl.weblang.omegat.Menu
+import pl.weblang.omegat.SelectionAdapter
 import pl.weblang.persistence.ExactHitsRepository
 import pl.weblang.persistence.MissingGlossaryEntryRepository
 import pl.weblang.persistence.WildcardHitsRepository
@@ -34,12 +37,12 @@ class Weblang {
     private val integrationManager = IntegrationManager(integrationSettings)
     private val backgroundService: BackgroundService by lazy {
         BackgroundService(integrationManager.verifierIntegrations(),
-                missingGlossaryEntryRepository, exactHitsRepository, suggestionsRepository, CoreAdapter)
+                          missingGlossaryEntryRepository, exactHitsRepository, suggestionsRepository, CoreAdapter)
     }
     private val selectionHandler = SelectionAdapter(CoreAdapter)
     private val instantSearchService: InstantSearchService by lazy {
         InstantSearchService(WebIntegrationController(integrationManager.instantSearchIntegrations()),
-                selectionHandler, instantSearchPaneController)
+                             selectionHandler, instantSearchPaneController)
     }
 
     /**

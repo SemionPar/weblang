@@ -6,7 +6,7 @@ import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
-import pl.weblang.background.source.WildcardHitVO
+import pl.weblang.domain.background.source.WildcardHitVO
 
 /**
  * Repository for wildcard hits
@@ -51,13 +51,13 @@ class WildcardHitsRepository {
 
     private fun fromRow(row: ResultRow) =
             WildcardHitVO(row[WildcardHitsTable.fragmentSize],
-                    row[WildcardHitsTable.fragmentPosition],
-                    row[WildcardHitsTable.wildcardPosition],
-                    row[WildcardHitsTable.suggestion],
-                    row[WildcardHitsTable.file],
-                    row[WildcardHitsTable.sourceIntegration],
-                    row[WildcardHitsTable.sourceIntegrationFileName],
-                    row[WildcardHitsTable.segmentNumber],
-                    row[WildcardHitsTable.timestamp])
+                          row[WildcardHitsTable.fragmentPosition],
+                          row[WildcardHitsTable.wildcardPosition],
+                          row[WildcardHitsTable.suggestion],
+                          row[WildcardHitsTable.file],
+                          row[WildcardHitsTable.sourceIntegration],
+                          row[WildcardHitsTable.sourceIntegrationFileName],
+                          row[WildcardHitsTable.segmentNumber],
+                          row[WildcardHitsTable.timestamp])
 
 }

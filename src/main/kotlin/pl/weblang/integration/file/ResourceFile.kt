@@ -1,6 +1,6 @@
 package pl.weblang.integration.file
 
-import pl.weblang.background.source.WildcardMatch
+import pl.weblang.domain.background.source.WildcardMatch
 import java.io.File
 
 /**

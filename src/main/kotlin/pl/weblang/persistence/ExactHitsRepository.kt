@@ -6,7 +6,7 @@ import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
-import pl.weblang.background.source.ExactHitVO
+import pl.weblang.domain.background.source.ExactHitVO
 
 /**
  * Repository for exact hits
@@ -51,11 +51,11 @@ class ExactHitsRepository : Repository<ExactHitVO> {
 
     private fun fromRow(row: ResultRow): ExactHitVO =
             ExactHitVO(row[ExactHitsTable.fragmentSize],
-                    row[ExactHitsTable.fragmentPosition],
-                    row[ExactHitsTable.file],
-                    row[ExactHitsTable.sourceIntegration],
-                    row[ExactHitsTable.sourceIntegrationFileName],
-                    row[ExactHitsTable.segmentNumber],
-                    row[ExactHitsTable.timestamp])
+                       row[ExactHitsTable.fragmentPosition],
+                       row[ExactHitsTable.file],
+                       row[ExactHitsTable.sourceIntegration],
+                       row[ExactHitsTable.sourceIntegrationFileName],
+                       row[ExactHitsTable.segmentNumber],
+                       row[ExactHitsTable.timestamp])
 
 }
